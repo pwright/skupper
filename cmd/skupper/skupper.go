@@ -168,6 +168,7 @@ func NewClient(namespace string, context string, kubeConfigPath string) *client.
 
 var routerCreateOpts types.SiteConfigSpec
 
+	
 func NewCmdInit(newClient cobraFunc) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "init",
@@ -228,6 +229,28 @@ func NewCmdDelete(newClient cobraFunc) *cobra.Command {
 			if err != nil {
 				err = cli.RouterRemove(context.Background())
 			}
+			if err != nil {
+				return err
+			} else {
+				fmt.Println("Skupper is now removed from '" + cli.GetNamespace() + "'.")
+			}
+			return nil
+		},
+	}
+	return cmd
+}
+
+func NewCmdDoc(newClient cobraFunc) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:    "doc",
+		Short:  "Document skupper ",
+		Long:   `doc will document any skupper commands`,
+		Args:   cobra.NoArgs,
+		PreRun: newClient,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			silenceCobra(cmd)
+			err := doc.GenMarkdownTree(cmd, "/tmp")
+			
 			if err != nil {
 				return err
 			} else {
