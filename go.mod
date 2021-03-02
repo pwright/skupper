@@ -16,7 +16,7 @@ require (
 	github.com/openshift/api v0.0.0-20200109182645-c3cf38ec5571
 	github.com/openshift/client-go v0.0.0-20200109173103-2763c6378941
 	github.com/pkg/errors v0.8.1 // indirect
-	github.com/spf13/cobra v0.0.6
+	github.com/spf13/cobra v1.0.0
 	github.com/tsenart/vegeta/v12 v12.8.3
 	gotest.tools v2.2.0+incompatible
 	k8s.io/api v0.17.0
