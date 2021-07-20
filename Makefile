@@ -1,7 +1,7 @@
 VERSION := $(shell git describe --tags --dirty=-modified --always)
-SERVICE_CONTROLLER_IMAGE := quay.io/skupper/service-controller
-SITE_CONTROLLER_IMAGE := quay.io/skupper/site-controller
-TEST_IMAGE := quay.io/skupper/skupper-tests
+SERVICE_CONTROLLER_IMAGE := quay.io/pwright/service-controller
+SITE_CONTROLLER_IMAGE := quay.io/pwright/site-controller
+TEST_IMAGE := quay.io/pwright/skupper-tests
 TEST_BINARIES_FOLDER := ${PWD}/test/integration/bin
 DOCKER := docker
 LDFLAGS := -X github.com/skupperproject/skupper/client.Version=${VERSION}
