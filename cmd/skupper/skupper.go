@@ -10,6 +10,7 @@ import (
 
 	routev1 "github.com/openshift/api/route/v1"
 	"github.com/skupperproject/skupper/pkg/utils/formatter"
+	"github.com/spf13/cobra/doc"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/resource"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -1724,6 +1725,29 @@ the .bash_profile. i.e.: $ source <(skupper completion)
 	return cmd
 }
 
+func NewCmdMan() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "man",
+		Short: "generate man pages",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			header := &doc.GenManHeader{
+				Title:   "SKUPPER",
+				Section: "1",
+			}
+			err := doc.GenManTree(rootCmd, header, "/tmp")
+			if err != nil {
+				return err
+			}
+			err = doc.GenMarkdownTree(rootCmd, "/tmp")
+			if err != nil {
+				return err
+			}
+			return nil
+		},
+	}
+	return cmd
+}
+
 type cobraFunc func(cmd *cobra.Command, args []string)
 
 func newClient(cmd *cobra.Command, args []string) {
@@ -1846,6 +1870,7 @@ func init() {
 	cmdToken.AddCommand(NewCmdTokenCreate(newClient, ""))
 
 	cmdCompletion := NewCmdCompletion()
+	cmdMan := NewCmdMan()
 
 	cmdRevokeAll := NewCmdRevokeaccess(newClient)
 
@@ -1873,6 +1898,7 @@ func init() {
 		cmdVersion,
 		cmdDebug,
 		cmdCompletion,
+		cmdMan,
 		cmdGateway,
 		cmdRevokeAll,
 		cmdNetwork)
