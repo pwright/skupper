@@ -16,11 +16,14 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/imdario/mergo v0.3.8 // indirect
 	github.com/interconnectedcloud/go-amqp v0.12.6-0.20200506124159-f51e540008b5
+	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/openshift/api v0.0.0-20200109182645-c3cf38ec5571
 	github.com/openshift/client-go v0.0.0-20200109173103-2763c6378941
 	github.com/prometheus/common v0.4.0
+	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/skupperproject/skupper-example-tcp-echo v0.0.0-20210727195922-db4a7dc7b35d
-	github.com/spf13/cobra v0.0.6
+	github.com/spf13/cobra v1.4.0
+	github.com/spf13/viper v1.4.0 // indirect
 	github.com/tsenart/vegeta/v12 v12.8.3
 	go.mongodb.org/mongo-driver v1.5.1
 	golang.org/x/net v0.0.0-20201224014010-6772e930b67b
