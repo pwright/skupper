@@ -1,4 +1,4 @@
-.skupper gateway export-config
+= Skupper gateway export-config
 
 Export the configuration for a gateway definition
 

@@ -1,4 +1,4 @@
-.skupper gateway delete
+= Skupper gateway delete
 
 Stop the gateway instance and remove the definition
 

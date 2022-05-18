@@ -1,4 +1,4 @@
-.skupper debug service
+= Skupper debug service
 
 Check the internal state of a skupper exposed service
 
@@ -6,7 +6,7 @@ Check the internal state of a skupper exposed service
 
 .Options
 
--v, --verbose   More detailed output (in json)
+* `verbose`  More detailed output (in json)
 
 .SEE ALSO
 

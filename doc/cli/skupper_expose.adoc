@@ -1,4 +1,4 @@
-.skupper expose
+= Skupper expose
 
 Expose a set of pods through a Skupper address
 

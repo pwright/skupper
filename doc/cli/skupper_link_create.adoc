@@ -1,4 +1,4 @@
-.skupper link create
+= Skupper link create
 
 Links this skupper installation to that which issued the specified token
 

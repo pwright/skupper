@@ -1,4 +1,4 @@
-.skupper version
+= Skupper version
 
 Report the version of the Skupper CLI and services
 

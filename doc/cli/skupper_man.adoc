@@ -1,4 +1,4 @@
-.skupper man
+= Skupper man
 
 generate man pages
 

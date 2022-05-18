@@ -1,4 +1,4 @@
-.skupper network status
+= Skupper network status
 
 Shows information about the current site, and connected sites.
 
@@ -6,7 +6,7 @@ Shows information about the current site, and connected sites.
 
 .Options
 
--s, --site string   Site identifier (default "all")
+* `site - string`  Site identifier (default "all")
 
 .SEE ALSO
 

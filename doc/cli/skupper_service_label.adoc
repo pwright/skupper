@@ -1,4 +1,4 @@
-.skupper service label
+= Skupper service label
 
 Manage service labels
 

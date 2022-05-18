@@ -1,4 +1,4 @@
-.skupper gateway generate-bundle
+= Skupper gateway generate-bundle
 
 Generate an installation bundle using a gateway config file
 

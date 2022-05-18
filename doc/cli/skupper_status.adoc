@@ -1,4 +1,4 @@
-.skupper status
+= Skupper status
 
 Report the status of the current Skupper site
 

@@ -1,4 +1,4 @@
-.skupper gateway init
+= Skupper gateway init
 
 Initialize a gateway to the service network
 

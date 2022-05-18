@@ -1,4 +1,4 @@
-.skupper gateway unexpose
+= Skupper gateway unexpose
 
 Unexpose a process previously exposed to the service network
 

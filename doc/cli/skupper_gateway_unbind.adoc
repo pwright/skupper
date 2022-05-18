@@ -1,4 +1,4 @@
-.skupper gateway unbind
+= Skupper gateway unbind
 
 Unbind a process from the service network
 

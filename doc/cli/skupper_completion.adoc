@@ -1,4 +1,4 @@
-.skupper completion
+= Skupper completion
 
 Output shell completion code for bash
 

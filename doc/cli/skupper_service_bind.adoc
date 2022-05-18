@@ -1,4 +1,4 @@
-.skupper service bind
+= Skupper service bind
 
 Bind a target to a service
 

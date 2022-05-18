@@ -1,4 +1,4 @@
-.skupper link delete
+= Skupper link delete
 
 Remove specified link
 

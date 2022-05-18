@@ -1,4 +1,4 @@
-.skupper service status
+= Skupper service status
 
 List services exposed over the service network
 

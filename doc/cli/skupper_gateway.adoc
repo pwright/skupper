@@ -1,4 +1,4 @@
-.skupper gateway
+= Skupper gateway
 
 Manage skupper gateway definitions
 

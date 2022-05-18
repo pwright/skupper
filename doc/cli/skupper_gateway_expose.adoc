@@ -1,4 +1,4 @@
-.skupper gateway expose
+= Skupper gateway expose
 
 Expose a process to the service network (ensure gateway and cluster service)
 

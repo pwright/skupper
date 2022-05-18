@@ -1,4 +1,4 @@
-.skupper service create
+= Skupper service create
 
 Create a skupper service
 

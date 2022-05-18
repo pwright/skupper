@@ -1,4 +1,4 @@
-.skupper gateway forward
+= Skupper gateway forward
 
 Forward an address to the service network
 

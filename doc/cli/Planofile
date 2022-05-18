@@ -1,7 +1,6 @@
 
 from plano import *
-import csv
-import sys
+
 import re
 
 @command
@@ -41,7 +40,9 @@ def adoc_parse(path, logseqDir):
       
       #matches
       omatch = re.match(r'^      --(.*?)  (.*)', line)
+      opmatch = re.match(r'^  .*--(.*?)  (.*)', line)
 
+      h1match = re.match(r'^## skupper (.*)', line)
       hmatch = re.match(r'^#+ (.*)', line)
       amatch = re.match('.*spf13.*', line)
       cmatch = re.match('```', line)
@@ -67,6 +68,9 @@ def adoc_parse(path, logseqDir):
           next(f)
           next(f)
 
+      elif h1match:
+          append(writeFile, "# Skupper " + h1match.group(1)+"\n\n")
+
       elif hmatch:
           append(writeFile, "." + hmatch.group(1)+"\n\n")
 
@@ -77,6 +81,14 @@ def adoc_parse(path, logseqDir):
           start = omatch.group(1)
           start = start.replace('string','- string')
           end = omatch.group(2)
+          end = end.replace('[','`[')
+          end = end.replace(']',']`')
+          append(writeFile, "* `" + start +"` " +end + "\n\n")
+
+      elif opmatch:
+          start = opmatch.group(1)
+          start = start.replace('string','- string')
+          end = opmatch.group(2)
           end = end.replace('[','`[')
           end = end.replace(']',']`')
           append(writeFile, "* `" + start +"` " +end + "\n\n")

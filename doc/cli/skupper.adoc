@@ -1,12 +1,12 @@
-.skupper
+= Skupper command reference
 
-.Options
+Precede all options with `--`, for example `skupper init --ingress none`
 
--c, --context string      The kubeconfig context to use
+.Common Options
 
+* `context - string`     The kubeconfig context to use
 * `kubeconfig - string`  Path to the kubeconfig file to use
-+
--n, --namespace string    The Kubernetes namespace to use
+* `namespace - string`   The Kubernetes namespace to use
 
 .SEE ALSO
 
@@ -17,7 +17,6 @@
 * xref:skupper_gateway.adoc[skupper gateway]	 - Manage skupper gateway definitions
 * xref:skupper_init.adoc[skupper init]	 - Initialise skupper installation
 * xref:skupper_link.adoc[skupper link]	 - Manage skupper links definitions
-* xref:skupper_man.adoc[skupper man]	 - generate man pages
 * xref:skupper_network.adoc[skupper network]	 - Show information about the sites and services included in the network.
 * xref:skupper_revoke-access.adoc[skupper revoke-access]	 - Revoke all previously granted access to the site.
 * xref:skupper_service.adoc[skupper service]	 - Manage skupper service definitions

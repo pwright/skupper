@@ -1,4 +1,4 @@
-.skupper link status
+= Skupper link status
 
 Check whether a link to another Skupper site is active
 

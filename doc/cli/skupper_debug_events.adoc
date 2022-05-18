@@ -1,4 +1,4 @@
-.skupper debug events
+= Skupper debug events
 
 Show events
 
@@ -6,7 +6,7 @@ Show events
 
 .Options
 
--v, --verbose   More detailed output (in json)
+* `verbose`  More detailed output (in json)
 
 .SEE ALSO
 

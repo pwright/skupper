@@ -1,4 +1,4 @@
-.skupper service delete
+= Skupper service delete
 
 Delete a skupper service
 

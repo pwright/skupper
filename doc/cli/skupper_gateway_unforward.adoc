@@ -1,4 +1,4 @@
-.skupper gateway unforward
+= Skupper gateway unforward
 
 Stop forwarding an address to the service network
 

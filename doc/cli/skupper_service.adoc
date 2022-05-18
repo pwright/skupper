@@ -1,4 +1,4 @@
-.skupper service
+= Skupper service
 
 Manage skupper service definitions
 

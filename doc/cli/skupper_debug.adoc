@@ -1,4 +1,4 @@
-.skupper debug
+= Skupper debug
 
 Debug skupper installation
 

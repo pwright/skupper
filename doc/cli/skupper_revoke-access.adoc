@@ -1,4 +1,4 @@
-.skupper revoke-access
+= Skupper revoke-access
 
 Revoke all previously granted access to the site.
 

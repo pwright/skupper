@@ -1,4 +1,4 @@
-.skupper update
+= Skupper update
 
 Update skupper installation version
 
