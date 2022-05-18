@@ -1,0 +1,93 @@
+
+from plano import *
+import csv
+import sys
+import re
+
+@command
+def clean(app):
+    """
+    delete  
+    """
+    remove('build')
+
+
+@command
+def generate(app):
+    """
+    Generate adoc
+    """
+    logseqDir = make_temp_dir()
+    curDir = get_current_dir()
+    for path in find("./", "*.md"):
+        print(path)
+        adoc_parse(path, logseqDir)
+        with working_dir(logseqDir):
+            call("kramdoc --format=GFM --wrap=ventilate " + get_base_name(path))
+            call("cp -rf " + get_name_stem(path) + ".adoc " + curDir)
+
+
+
+
+def adoc_parse(path, logseqDir):
+  
+  pageName=get_base_name(path) 
+  writeFile = logseqDir +'/' + pageName
+  write(writeFile, '')
+  
+  f = open(path)
+  for line in f:
+      line = line.rstrip()
+      
+      #matches
+      omatch = re.match(r'^      --(.*?)  (.*)', line)
+
+      hmatch = re.match(r'^#+ (.*)', line)
+      amatch = re.match('.*spf13.*', line)
+      cmatch = re.match('```', line)
+      qmatch = re.match('.*--help.*', line)
+      pmatch = re.match('.*inherited from parent commands.*',line)
+      smatch = re.match(r'^skupper (.*)', line)
+
+
+      
+      if amatch:
+          pass
+
+      elif cmatch:
+          pass
+      elif qmatch:
+          pass
+
+      elif pmatch:
+          next(f)
+          next(f)
+          next(f)
+          next(f)
+          next(f)
+          next(f)
+
+      elif hmatch:
+          append(writeFile, "." + hmatch.group(1)+"\n\n")
+
+      elif smatch:
+          append(writeFile, "`skupper " + smatch.group(1)+"`\n\n")
+
+      elif omatch:
+          start = omatch.group(1)
+          start = start.replace('string','- string')
+          end = omatch.group(2)
+          end = end.replace('[','`[')
+          end = end.replace(']',']`')
+          append(writeFile, "* `" + start +"` " +end + "\n\n")
+
+      else:
+          append(writeFile, line+"\n\n")
+    
+
+
+
+
+
+
+            
