@@ -115,3 +115,15 @@ func IsDirEmpty(name string) (bool, error) {
 
 	return false, err
 }
+
+func StringSlicesEqual(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for _, v := range a {
+		if !StringSliceContains(b, v) {
+			return false
+		}
+	}
+	return true
+}

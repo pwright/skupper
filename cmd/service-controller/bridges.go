@@ -7,7 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/skupperproject/skupper/client"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	corev1informer "k8s.io/client-go/informers/core/v1"
@@ -123,8 +122,7 @@ func hasTargetForService(si types.ServiceInterface, service string) bool {
 }
 
 func (c *Controller) updateServiceBindings(required types.ServiceInterface, portAllocations map[string][]int) error {
-	policy := client.NewClusterPolicyValidator(c.vanClient)
-	res := policy.ValidateImportService(required.Address)
+	res := c.policy.ValidateImportService(required.Address)
 	bindings := c.bindings[required.Address]
 	if bindings == nil {
 		if !res.Allowed() {
@@ -416,7 +414,10 @@ func addEgressBridge(protocol string, host string, port map[int]int, address str
 			}
 
 			if len(tlsCredentials) > 0 {
+				verifyHostName := new(bool)
+				*verifyHostName = false
 				httpConnector.SslProfile = types.ServiceClientSecret
+				httpConnector.VerifyHostname = verifyHostName
 			}
 			bridges.AddHttpConnector(httpConnector)
 		case ProtocolTCP:

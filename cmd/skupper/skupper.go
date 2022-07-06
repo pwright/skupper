@@ -155,6 +155,12 @@ func expose(cli types.VanClientInterface, ctx context.Context, targetType string
 		return "", fmt.Errorf("Service already exposed, cannot reconfigure as headless")
 	} else if options.Protocol != "" && service.Protocol != options.Protocol {
 		return "", fmt.Errorf("Invalid protocol %s for service with mapping %s", options.Protocol, service.Protocol)
+	} else if options.EnableTls && options.Protocol != "http2" {
+		return "", fmt.Errorf("TLS can not be enabled for service with mapping %s (only available for http2)", service.Protocol)
+	} else if options.EnableTls && !service.EnableTls {
+		return "", fmt.Errorf("Service already exposed without TLS support")
+	} else if !options.EnableTls && service.EnableTls {
+		return "", fmt.Errorf("Service already exposed with TLS support")
 	}
 
 	// service may exist from remote origin
@@ -280,7 +286,7 @@ func NewClientHandleError(namespace string, context string, kubeConfigPath strin
 	if err != nil {
 		if exitOnError {
 			if strings.Contains(err.Error(), "invalid configuration: no configuration has been provided") {
-				fmt.Printf("%s. Please point to an existing, complete config file.\n", err.Error())
+				fmt.Printf("%s. Please point to an existing, valid kubeconfig file.\n", err.Error())
 			} else {
 				fmt.Println(err.Error())
 			}
@@ -393,8 +399,8 @@ installation that can then be connected to other skupper installations`,
 				routerCreateOpts.Router.Logging = logConfig
 			}
 			if routerCreateOpts.Router.DebugMode != "" {
-				if routerCreateOpts.Router.DebugMode != "valgrind" && routerCreateOpts.Router.DebugMode != "gdb" {
-					return fmt.Errorf("Bad value for --router-debug-mode: %s (use 'valgrind' or 'gdb')", routerCreateOpts.Router.DebugMode)
+				if routerCreateOpts.Router.DebugMode != "asan" && routerCreateOpts.Router.DebugMode != "gdb" {
+					return fmt.Errorf("Bad value for --router-debug-mode: %s (use 'asan' or 'gdb')", routerCreateOpts.Router.DebugMode)
 				}
 			}
 
@@ -442,7 +448,7 @@ installation that can then be connected to other skupper installations`,
 	cmd.Flags().BoolVarP(&routerCreateOpts.EnableServiceSync, "enable-service-sync", "", true, "Participate in cross-site service synchronization")
 	cmd.Flags().BoolVarP(&routerCreateOpts.EnableRouterConsole, "enable-router-console", "", false, "Enable router console")
 	cmd.Flags().StringVarP(&routerLogging, "router-logging", "", "", "Logging settings for router. 'trace', 'debug', 'info' (default), 'notice', 'warning', and 'error' are valid values.")
-	cmd.Flags().StringVarP(&routerCreateOpts.Router.DebugMode, "router-debug-mode", "", "", "Enable debug mode for router ('valgrind' or 'gdb' are valid values)")
+	cmd.Flags().StringVarP(&routerCreateOpts.Router.DebugMode, "router-debug-mode", "", "", "Enable debug mode for router ('asan' or 'gdb' are valid values)")
 
 	cmd.Flags().IntVar(&routerCreateOpts.Routers, "routers", 0, "Number of router replicas to start")
 	cmd.Flags().StringVar(&routerCreateOpts.Router.Cpu, "router-cpu", "", "CPU request for router pods")
@@ -466,6 +472,11 @@ installation that can then be connected to other skupper installations`,
 	cmd.Flags().StringVar(&routerCreateOpts.Controller.IngressHost, "controller-ingress-host", "", "Host through which node is accessible when using nodeport as ingress.")
 	cmd.Flags().StringSliceVar(&controllerServiceAnnotations, "controller-service-annotation", []string{}, "Annotations to add to skupper controller service")
 	cmd.Flags().StringVar(&routerCreateOpts.Controller.LoadBalancerIp, "controller-load-balancer-ip", "", "Load balancer ip that will be used for controller service, if supported by cloud provider")
+
+	cmd.Flags().StringVar(&routerCreateOpts.ConfigSync.Cpu, "config-sync-cpu", "", "CPU request for config-sync pods")
+	cmd.Flags().StringVar(&routerCreateOpts.ConfigSync.Memory, "config-sync-memory", "", "Memory request for config-sync pods")
+	cmd.Flags().StringVar(&routerCreateOpts.ConfigSync.CpuLimit, "config-sync-cpu-limit", "", "CPU limit for config-sync pods")
+	cmd.Flags().StringVar(&routerCreateOpts.ConfigSync.MemoryLimit, "config-sync-memory-limit", "", "Memory limit for config-sync pods")
 
 	cmd.Flags().BoolVarP(&ClusterLocal, "cluster-local", "", false, "Set up Skupper to only accept links from within the local cluster.")
 	f := cmd.Flag("cluster-local")
@@ -502,7 +513,7 @@ func NewCmdDelete(newClient cobraFunc) *cobra.Command {
 			silenceCobra(cmd)
 			gateways, err := cli.GatewayList(context.Background())
 			for _, gateway := range gateways {
-				cli.GatewayRemove(context.Background(), gateway.GatewayName)
+				cli.GatewayRemove(context.Background(), gateway.Name)
 			}
 			err = cli.SiteConfigRemove(context.Background())
 			if err != nil {
@@ -754,11 +765,7 @@ func NewCmdExpose(newClient cobraFunc) *cobra.Command {
 	cmd.Flags().StringVar(&exposeOpts.ProxyTuning.NodeSelector, "proxy-node-selector", "", "Node selector to control placement of router pods")
 	cmd.Flags().StringVar(&exposeOpts.ProxyTuning.Affinity, "proxy-pod-affinity", "", "Pod affinity label matches to control placement of router pods")
 	cmd.Flags().StringVar(&exposeOpts.ProxyTuning.AntiAffinity, "proxy-pod-antiaffinity", "", "Pod antiaffinity label matches to control placement of router pods")
-	cmd.Flags().BoolVar(&exposeOpts.EnableTls, "enable-tls", false, "If specified, this service will have TLS support for services.")
-
-	// TODO: Disabled flag to enable when the router image version that support TLS is ready for skupper
-	f := cmd.Flag("enable-tls")
-	f.Hidden = true
+	cmd.Flags().BoolVar(&exposeOpts.EnableTls, "enable-tls", false, "If specified, the service will be exposed over TLS (valid only for http2 protocol)")
 
 	return cmd
 }
@@ -1019,11 +1026,7 @@ func NewCmdCreateService(newClient cobraFunc) *cobra.Command {
 	cmd.Flags().StringVar(&serviceToCreate.Protocol, "mapping", "tcp", "The mapping in use for this service address (currently one of tcp or http)")
 	cmd.Flags().StringVar(&serviceToCreate.Aggregate, "aggregate", "", "The aggregation strategy to use. One of 'json' or 'multipart'. If specified requests to this service will be sent to all registered implementations and the responses aggregated.")
 	cmd.Flags().BoolVar(&serviceToCreate.EventChannel, "event-channel", false, "If specified, this service will be a channel for multicast events.")
-	cmd.Flags().BoolVar(&serviceToCreate.EnableTls, "enable-tls", false, "If specified, this service will have TLS support for services.")
-
-	// TODO: Disabled flag to enable when the router image version that support TLS is ready for skupper
-	f := cmd.Flag("enable-tls")
-	f.Hidden = true
+	cmd.Flags().BoolVar(&serviceToCreate.EnableTls, "enable-tls", false, "If specified, the service communication will be encrypted using TLS")
 
 	return cmd
 }
@@ -1209,6 +1212,7 @@ func NewCmdInitGateway(newClient cobraFunc) *cobra.Command {
 }
 
 func NewCmdDeleteGateway(newClient cobraFunc) *cobra.Command {
+	verbose := false
 	cmd := &cobra.Command{
 		Use:    "delete",
 		Short:  "Stop the gateway instance and remove the definition",
@@ -1218,12 +1222,19 @@ func NewCmdDeleteGateway(newClient cobraFunc) *cobra.Command {
 			silenceCobra(cmd)
 
 			err := cli.GatewayRemove(context.Background(), gatewayName)
-			if err != nil {
-				return fmt.Errorf("%w", err)
+			if err != nil && verbose {
+				l := formatter.NewList()
+				l.Item("Exception while removing gateway definition:")
+				parts := strings.Split(err.Error(), ",")
+				for _, part := range parts {
+					l.NewChild(fmt.Sprintf("%s", part))
+				}
+				l.Print()
 			}
 			return nil
 		},
 	}
+	cmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "More details on any exceptions during gateway removal")
 	cmd.Flags().StringVar(&deprecatedName, "name", "", "The name of gateway definition to remove")
 
 	f := cmd.Flag("name")
@@ -1491,24 +1502,32 @@ func NewCmdStatusGateway(newClient cobraFunc) *cobra.Command {
 			}
 
 			if len(gateways) == 0 {
-				fmt.Println("No gateway definitions found")
+				l := formatter.NewList()
+				l.Item("No gateway definition found on cluster")
+				gatewayType, err := client.GatewayDetectTypeIfPresent()
+				if err == nil {
+					if gatewayType != "" {
+						l.NewChild(fmt.Sprintf(" A gateway of type %s is detected on local host.", gatewayType))
+					}
+				}
+				l.Print()
 				return nil
 			}
 
 			l := formatter.NewList()
 			l.Item("Gateway Definition:")
 			for _, gateway := range gateways {
-				gw := l.NewChild(fmt.Sprintf("%s type:%s version:%s", gateway.GatewayName, gateway.GatewayType, gateway.GatewayVersion))
-				if len(gateway.GatewayConnectors) > 0 {
+				gw := l.NewChild(fmt.Sprintf("%s type:%s version:%s", gateway.Name, gateway.Type, gateway.Version))
+				if len(gateway.Connectors) > 0 {
 					listeners := gw.NewChild("Bindings:")
-					for _, connector := range gateway.GatewayConnectors {
-						listeners.NewChild(fmt.Sprintf("%s %s %s %s %d", strings.TrimPrefix(connector.Name, gateway.GatewayName+"-egress-"), connector.Service.Protocol, connector.Service.Address, connector.Host, connector.Service.Ports[0]))
+					for _, connector := range gateway.Connectors {
+						listeners.NewChild(fmt.Sprintf("%s %s %s %s %d", strings.TrimPrefix(connector.Name, gateway.Name+"-egress-"), connector.Service.Protocol, connector.Service.Address, connector.Host, connector.Service.Ports[0]))
 					}
 				}
-				if len(gateway.GatewayListeners) > 0 {
+				if len(gateway.Listeners) > 0 {
 					listeners := gw.NewChild("Forwards:")
-					for _, listener := range gateway.GatewayListeners {
-						listeners.NewChild(fmt.Sprintf("%s %s %s %s %d:%s", strings.TrimPrefix(listener.Name, gateway.GatewayName+"-ingress-"), listener.Service.Protocol, listener.Service.Address, listener.Host, listener.Service.Ports[0], listener.LocalPort))
+					for _, listener := range gateway.Listeners {
+						listeners.NewChild(fmt.Sprintf("%s %s %s %s %d:%s", strings.TrimPrefix(listener.Name, gateway.Name+"-ingress-"), listener.Service.Protocol, listener.Service.Address, listener.Host, listener.Service.Ports[0], listener.LocalPort))
 					}
 				}
 			}
@@ -1611,6 +1630,7 @@ func NewCmdVersion(newClient cobraFunc) *cobra.Command {
 			if !IsZero(reflect.ValueOf(cli)) {
 				fmt.Printf("%-30s %s\n", "transport version", cli.GetVersion(types.TransportComponentName, types.TransportContainerName))
 				fmt.Printf("%-30s %s\n", "controller version", cli.GetVersion(types.ControllerComponentName, types.ControllerContainerName))
+				fmt.Printf("%-30s %s\n", "config-sync version", cli.GetVersion(types.TransportComponentName, types.ConfigSyncContainerName))
 			} else {
 				fmt.Printf("%-30s %s\n", "transport version", "not-found (no configuration has been provided)")
 				fmt.Printf("%-30s %s\n", "controller version", "not-found (no configuration has been provided)")

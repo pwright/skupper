@@ -1184,9 +1184,32 @@ func asSslProfile(record Record) SslProfile {
 	}
 }
 
+func asRecord(connector Connector) Record {
+
+	record := map[string]interface{}{}
+	record["name"] = connector.Name
+	record["role"] = string(connector.Role)
+	record["host"] = connector.Host
+	record["port"] = connector.Port
+	if connector.Cost > 0 {
+		record["cost"] = connector.Cost
+	}
+	if len(connector.SslProfile) > 0 {
+		record["sslProfile"] = connector.SslProfile
+	}
+	if connector.MaxFrameSize > 0 {
+		record["maxFrameSize"] = connector.MaxFrameSize
+	}
+	if connector.MaxSessionFrames > 0 {
+		record["maxSessionFrames"] = connector.MaxSessionFrames
+	}
+
+	return record
+}
+
 func (a *Agent) UpdateConnectorConfig(changes *ConnectorDifference) error {
 	for _, deleted := range changes.Deleted {
-		if err := a.Delete("io.skupper.router.connector", deleted); err != nil {
+		if err := a.Delete("io.skupper.router.connector", deleted.Name); err != nil {
 			return fmt.Errorf("Error deleting connectors: %s", err)
 		}
 	}
@@ -1223,11 +1246,7 @@ func (a *Agent) UpdateConnectorConfig(changes *ConnectorDifference) error {
 			}
 		}
 
-		record := map[string]interface{}{}
-		if err := convert(added, &record); err != nil {
-			return fmt.Errorf("Failed to convert record: %s", err)
-		}
-		if err := a.Create("io.skupper.router.connector", added.Name, record); err != nil {
+		if err := a.Create("io.skupper.router.connector", added.Name, asRecord(added)); err != nil {
 			return fmt.Errorf("Error adding connectors: %s", err)
 		}
 
@@ -1244,6 +1263,19 @@ func (a *Agent) GetLocalConnectorStatus() (map[string]ConnectorStatus, error) {
 	connectors := map[string]ConnectorStatus{}
 	for _, record := range results {
 		c := asConnectorStatus(record)
+		connectors[c.Name] = c
+	}
+	return connectors, nil
+}
+
+func (a *Agent) GetLocalConnectors() (map[string]Connector, error) {
+	results, err := a.Query("io.skupper.router.connector", []string{})
+	if err != nil {
+		return nil, err
+	}
+	connectors := map[string]Connector{}
+	for _, record := range results {
+		c := asConnector(record)
 		connectors[c.Name] = c
 	}
 	return connectors, nil

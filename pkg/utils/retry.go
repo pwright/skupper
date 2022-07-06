@@ -78,6 +78,28 @@ func RetryError(interval time.Duration, maxRetries int, f CheckedFunc) error {
 	}
 }
 
+type Result struct {
+	Value interface{}
+	Error error
+}
+
+type ResultFunc func() Result
+
+func TryUntil(maxWindowTime time.Duration, f ResultFunc) (interface{}, error) {
+
+	result := make(chan Result, 1)
+
+	go func() {
+		result <- f()
+	}()
+	select {
+	case <-time.After(maxWindowTime):
+		return nil, fmt.Errorf("timed out")
+	case result := <-result:
+		return result.Value, result.Error
+	}
+}
+
 // RetryWithContext retries f every interval until the specified context times out.
 func RetryWithContext(ctx context.Context, interval time.Duration, f ConditionFunc) error {
 	tick := time.NewTicker(interval)
@@ -86,7 +108,7 @@ func RetryWithContext(ctx context.Context, interval time.Duration, f ConditionFu
 	for {
 		select {
 		case <-ctx.Done():
-			return fmt.Errorf("the context timeout has been reached")
+			return context.DeadlineExceeded
 		case <-tick.C:
 			r, err := f()
 			if err != nil {

@@ -3,10 +3,11 @@ package base
 import (
 	"context"
 	"fmt"
+	"log"
 
-	"github.com/prometheus/common/log"
 	"github.com/skupperproject/skupper/api/types"
 	vanClient "github.com/skupperproject/skupper/client"
+	"github.com/skupperproject/skupper/test/utils/constants"
 )
 
 // ClusterNeeds enable customization of expected number of
@@ -220,6 +221,7 @@ func ConnectSimplePublicPrivate(ctx context.Context, r *ClusterTestRunnerBase) e
 		Password:          "admin",
 		Ingress:           pub1Cluster.VanClient.GetIngressDefault(),
 		Replicas:          1,
+		Router:            constants.DefaultRouterOptions(nil),
 	}
 	routerCreateSpecPrv := types.SiteConfigSpec{
 		SkupperName:       "",
@@ -232,6 +234,7 @@ func ConnectSimplePublicPrivate(ctx context.Context, r *ClusterTestRunnerBase) e
 		Password:          "admin",
 		Ingress:           pub1Cluster.VanClient.GetIngressDefault(),
 		Replicas:          1,
+		Router:            constants.DefaultRouterOptions(nil),
 	}
 	publicSiteConfig, err := pub1Cluster.VanClient.SiteConfigCreate(context.Background(), routerCreateSpecPub)
 	if err != nil {
@@ -272,7 +275,7 @@ func TearDownSimplePublicAndPrivate(r *ClusterTestRunnerBase) {
 	errMsg := "Something failed! aborting teardown"
 	err := RemoveNamespacesForContexts(r, []int{1}, []int{1})
 	if err != nil {
-		log.Warnf("%s: %s", errMsg, err.Error())
+		log.Printf("%s: %s", errMsg, err.Error())
 	}
 }
 
@@ -293,4 +296,11 @@ func RemoveNamespacesForContexts(r *ClusterTestRunnerBase, public []int, priv []
 		return err
 	}
 	return removeNamespaces(false, public)
+}
+
+func (c *ClusterTestRunnerBase) DumpTestInfo(dirname string) {
+	// Dumping info by cluster/namespace
+	for _, cc := range c.ClusterContexts {
+		cc.DumpTestInfo(dirname)
+	}
 }

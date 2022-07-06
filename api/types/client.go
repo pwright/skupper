@@ -69,6 +69,10 @@ type ControllerOptions struct {
 	LoadBalancerIp     string
 }
 
+type ConfigSyncOptions struct {
+	Tuning
+}
+
 type SiteConfigSpec struct {
 	SkupperName         string
 	SkupperNamespace    string
@@ -92,6 +96,7 @@ type SiteConfigSpec struct {
 	Labels              map[string]string
 	Router              RouterOptions
 	Controller          ControllerOptions
+	ConfigSync          ConfigSyncOptions
 }
 
 const (
@@ -231,12 +236,12 @@ type GatewayEndpoint struct {
 }
 
 type GatewayInspectResponse struct {
-	GatewayName       string
-	GatewayType       string
-	GatewayUrl        string
-	GatewayVersion    string
-	GatewayConnectors map[string]GatewayEndpoint
-	GatewayListeners  map[string]GatewayEndpoint
+	Name       string
+	Type       string
+	Url        string
+	Version    string
+	Connectors map[string]GatewayEndpoint
+	Listeners  map[string]GatewayEndpoint
 }
 
 type SiteInfo struct {

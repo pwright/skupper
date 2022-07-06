@@ -47,6 +47,7 @@ const (
 	TransportDeploymentName       string = "skupper-router"
 	TransportComponentName        string = "router"
 	TransportContainerName        string = "router"
+	ConfigSyncContainerName       string = "config-sync"
 	TransportLivenessPort         int32  = 9090
 	TransportServiceAccountName   string = "skupper-router"
 	TransportRoleName             string = "skupper-router"
@@ -127,7 +128,7 @@ const (
 	ConsoleServerSecret      string = "skupper-console-certs"
 	OauthRouterConsoleSecret string = "skupper-router-console-certs"
 	ServiceCaSecret          string = "skupper-service-ca"
-	ServiceClientSecret      string = "skupper-service-client"
+	ServiceClientSecret      string = "skupper-service-client" //Secret that is used in sslProfiles for all http2 connectors with tls enabled
 )
 
 // Skupper qualifiers
@@ -249,6 +250,7 @@ type RouterSpec struct {
 	Namespace             string          `json:"namespace,omitempty"`
 	AuthMode              ConsoleAuthMode `json:"authMode,omitempty"`
 	Transport             DeploymentSpec  `json:"transport,omitempty"`
+	ConfigSync            DeploymentSpec  `json:"configSync,omitempty"`
 	Controller            DeploymentSpec  `json:"controller,omitempty"`
 	RouterConfig          string          `json:"routerConfig,omitempty"`
 	Users                 []User          `json:"users,omitempty"`
@@ -622,4 +624,8 @@ func (a ByServiceInterfaceAddress) Less(i, j int) bool {
 
 func (a ByServiceInterfaceAddress) Swap(i, j int) {
 	a[i], a[j] = a[j], a[i]
+}
+
+func QualifiedServiceName(name string, namespace string) string {
+	return name + "." + namespace + ".svc.cluster.local"
 }

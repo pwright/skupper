@@ -142,12 +142,19 @@ func runTests(t *testing.T, r base.ClusterTestRunner) {
 
 	endTime = time.Now().Add(constants.ImagePullingAndResourceCreationTimeout)
 
+	rb := r.(*base.ClusterTestRunnerBase)
 	job, err := k8s.WaitForJob(pub1Cluster.Namespace, pub1Cluster.VanClient.KubeClient, jobName, endTime.Sub(time.Now()))
+	if err != nil {
+		rb.DumpTestInfo(jobName)
+	}
 	assert.Assert(t, err)
 	pub1Cluster.KubectlExec("logs job/" + jobName)
 	k8s.AssertJob(t, job)
 
 	job, err = k8s.WaitForJob(prv1Cluster.Namespace, prv1Cluster.VanClient.KubeClient, jobName, endTime.Sub(time.Now()))
+	if err != nil {
+		rb.DumpTestInfo(jobName)
+	}
 	assert.Assert(t, err)
 	prv1Cluster.KubectlExec("logs job/" + jobName)
 	k8s.AssertJob(t, job)
@@ -166,10 +173,14 @@ func runTests(t *testing.T, r base.ClusterTestRunner) {
 		_, err := cluster.VanClient.KubeClient.BatchV1().Jobs(cluster.Namespace).Create(ncJob)
 		assert.Assert(t, err)
 		// Asserting job completed
-		_, err = k8s.WaitForJob(cluster.Namespace, cluster.VanClient.KubeClient, ncJob.Name, time.Minute)
-		assert.Assert(t, err)
+		_, jobErr := k8s.WaitForJob(cluster.Namespace, cluster.VanClient.KubeClient, ncJob.Name, time.Minute)
 		// Asserting job output
 		logs, err := k8s.GetJobLogs(cluster.Namespace, cluster.VanClient.KubeClient, ncJob.Name)
+		if jobErr != nil || err != nil {
+			rb.DumpTestInfo(ncJob.Name)
+			log.Printf("%s job output: %s", ncJob.Name, logs)
+		}
+		assert.Assert(t, jobErr)
 		assert.Assert(t, err)
 		assert.Assert(t, strings.Contains(logs, "HALO"), "invalid response - %s", logs)
 	}

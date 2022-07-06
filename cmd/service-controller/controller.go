@@ -37,6 +37,7 @@ import (
 type Controller struct {
 	origin            string
 	vanClient         *client.VanClient
+	policy            *client.ClusterPolicyValidator
 	bridgeDefInformer cache.SharedIndexInformer
 	svcDefInformer    cache.SharedIndexInformer
 	svcInformer       cache.SharedIndexInformer
@@ -164,6 +165,7 @@ func NewController(cli *client.VanClient, origin string, tlsConfig *tls.Config, 
 
 	controller := &Controller{
 		vanClient:          cli,
+		policy:             client.NewClusterPolicyValidator(cli),
 		origin:             origin,
 		tlsConfig:          tlsConfig,
 		bridgeDefInformer:  bridgeDefInformer,
@@ -174,6 +176,7 @@ func NewController(cli *client.VanClient, origin string, tlsConfig *tls.Config, 
 		ports:              newFreePorts(),
 		disableServiceSync: disableServiceSync,
 	}
+	AddStaticPolicyWatcher(controller.policy)
 
 	// Organize service definitions
 	controller.byOrigin = make(map[string]map[string]types.ServiceInterface)
@@ -198,7 +201,7 @@ func NewController(cli *client.VanClient, origin string, tlsConfig *tls.Config, 
 	handler := func(changed []types.ServiceInterface, deleted []string, origin string) error {
 		return kube.UpdateSkupperServices(changed, deleted, origin, cli.Namespace, cli.KubeClient)
 	}
-	controller.serviceSync = service_sync.NewServiceSync(origin, client.Version, qdr.NewConnectionFactory("amqps://"+types.LocalTransportServiceName+":5671", tlsConfig), handler)
+	controller.serviceSync = service_sync.NewServiceSync(origin, client.Version, qdr.NewConnectionFactory("amqps://"+types.QualifiedServiceName(types.LocalTransportServiceName, cli.Namespace)+":5671", tlsConfig), handler)
 
 	controller.policyHandler = NewPolicyController(controller.vanClient)
 	return controller, nil
