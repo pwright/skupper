@@ -19,6 +19,15 @@ func (c *Controller) eventsourceHandler(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
+// swagger:operation GET /sites Sites listSites
+//
+// List all sites.
+//
+// ---
+// responses:
+//   '200':
+//     description: successful operation
+
 func (c *Controller) siteHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	c.FlowCollector.Request <- flow.ApiRequest{RecordType: flow.Site, Request: r}
@@ -48,6 +57,16 @@ func (c *Controller) routerHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "%s", *response.Body)
 	}
 }
+
+
+// swagger:operation GET /links Links listLinks
+//
+// List all links.
+//
+// ---
+// responses:
+//   '200':
+//     description: successful operation
 
 func (c *Controller) linkHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")

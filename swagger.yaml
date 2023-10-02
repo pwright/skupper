@@ -1,0 +1,35 @@
+basePath: /api/v1alpha1
+consumes:
+    - application/json
+host: skupper-console-host
+info:
+    description: Documentation of Skupper flow-collector API.
+    title: awesome.
+    version: 0.0.1
+paths:
+    /links:
+        get:
+            operationId: listLinks
+            responses:
+                "200":
+                    description: successful operation
+            summary: List all links.
+            tags:
+                - Links
+    /sites:
+        get:
+            operationId: listSites
+            responses:
+                "200":
+                    description: successful operation
+            summary: List all sites.
+            tags:
+                - Sites
+produces:
+    - application/json
+schemes:
+    - https
+securityDefinitions:
+    basic:
+        type: basic
+swagger: "2.0"
