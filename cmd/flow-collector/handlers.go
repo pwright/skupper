@@ -78,6 +78,15 @@ func (c *Controller) linkHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// swagger:operation GET /listeners Listeners listListeners
+//
+// List all listeners.
+//
+// ---
+// responses:
+//   '200':
+//     description: successful operation
+
 func (c *Controller) listenerHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	c.FlowCollector.Request <- flow.ApiRequest{RecordType: flow.Listener, Request: r}
@@ -87,6 +96,15 @@ func (c *Controller) listenerHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "%s", *response.Body)
 	}
 }
+
+// swagger:operation GET /connectors Connectors listConnectors
+//
+// List all connectors.
+//
+// ---
+// responses:
+//   '200':
+//     description: successful operation
 
 func (c *Controller) connectorHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -98,6 +116,15 @@ func (c *Controller) connectorHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// swagger:operation GET /addresses Addresses listAddresses
+//
+// List all addresses.
+//
+// ---
+// responses:
+//   '200':
+//     description: successful operation
+
 func (c *Controller) addressHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	c.FlowCollector.Request <- flow.ApiRequest{RecordType: flow.Address, Request: r}
@@ -107,6 +134,15 @@ func (c *Controller) addressHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "%s", *response.Body)
 	}
 }
+
+// swagger:operation GET /processes Processes listProcesses
+//
+// List all processes.
+//
+// ---
+// responses:
+//   '200':
+//     description: successful operation
 
 func (c *Controller) processHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
