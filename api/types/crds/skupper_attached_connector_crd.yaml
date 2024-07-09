@@ -2,6 +2,16 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: attachedconnectors.skupper.io
+  description:  |
+      Skupper allows a site to target pods in other namespaces. It requires two new 
+      resource types. The AttachedConnector resource is declared in the 
+      namespace where the pods to be tracked are running. 
+      It is largely similar to the Connector resource, but has a 
+      siteNamespace field that identifies the site in which it is desired 
+      that the pods being tracked are used to configure connectors. 
+      The other new resource type is the AttachedConnectorAnchor. This is 
+      created in the namespace of the site for which an AttachedConnector is 
+      to be defined.
 spec:
   group: skupper.io
   versions:
