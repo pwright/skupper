@@ -1,0 +1,1056 @@
+// Generated documentation. Please do not edit.
+:anchor_prefix: k8s-api
+
+[id="{p}-api-reference"]
+== API Reference
+
+.Packages
+- xref:{anchor_prefix}-skupper-io-v1alpha1[$$skupper.io/v1alpha1$$]
+
+
+[id="{anchor_prefix}-skupper-io-v1alpha1"]
+=== skupper.io/v1alpha1
+
+
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-accessgrant"]
+==== AccessGrant
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-accessgrantlist[$$AccessGrantList$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`kind`* __string__ | Kind is a string value representing the REST resource this object represents. +
+Servers may infer this from the endpoint the client submits requests to. +
+Cannot be updated. +
+In CamelCase. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds + |  | 
+| *`apiVersion`* __string__ | APIVersion defines the versioned schema of this representation of an object. +
+Servers should convert recognized schemas to the latest internal value, and +
+may reject unrecognized values. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources + |  | 
+| *`metadata`* __link:https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#objectmeta-v1-meta[$$ObjectMeta$$]__ | Refer to Kubernetes API documentation for fields of `metadata`.
+ |  | 
+| *`spec`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-accessgrantspec[$$AccessGrantSpec$$]__ |  |  | 
+| *`status`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-accessgrantstatus[$$AccessGrantStatus$$]__ |  |  | 
+|===
+
+
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-accessgrantspec"]
+==== AccessGrantSpec
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-accessgrant[$$AccessGrant$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`redemptionsAllowed`* __integer__ |  |  | 
+| *`expirationWindow`* __string__ |  |  | 
+| *`code`* __string__ |  |  | 
+| *`issuer`* __string__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-accessgrantstatus"]
+==== AccessGrantStatus
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-accessgrant[$$AccessGrant$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`url`* __string__ |  |  | 
+| *`code`* __string__ |  |  | 
+| *`ca`* __string__ |  |  | 
+| *`redeemed`* __integer__ |  |  | 
+| *`expiration`* __string__ |  |  | 
+| *`status`* __string__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-accesstoken"]
+==== AccessToken
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-accesstokenlist[$$AccessTokenList$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`kind`* __string__ | Kind is a string value representing the REST resource this object represents. +
+Servers may infer this from the endpoint the client submits requests to. +
+Cannot be updated. +
+In CamelCase. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds + |  | 
+| *`apiVersion`* __string__ | APIVersion defines the versioned schema of this representation of an object. +
+Servers should convert recognized schemas to the latest internal value, and +
+may reject unrecognized values. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources + |  | 
+| *`metadata`* __link:https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#objectmeta-v1-meta[$$ObjectMeta$$]__ | Refer to Kubernetes API documentation for fields of `metadata`.
+ |  | 
+| *`spec`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-accesstokenspec[$$AccessTokenSpec$$]__ |  |  | 
+| *`status`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-accesstokenstatus[$$AccessTokenStatus$$]__ |  |  | 
+|===
+
+
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-accesstokenspec"]
+==== AccessTokenSpec
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-accesstoken[$$AccessToken$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`url`* __string__ |  |  | 
+| *`code`* __string__ |  |  | 
+| *`ca`* __string__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-accesstokenstatus"]
+==== AccessTokenStatus
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-accesstoken[$$AccessToken$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`redeemed`* __boolean__ |  |  | 
+| *`status`* __string__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-attachedconnector"]
+==== AttachedConnector
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-attachedconnectorlist[$$AttachedConnectorList$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`kind`* __string__ | Kind is a string value representing the REST resource this object represents. +
+Servers may infer this from the endpoint the client submits requests to. +
+Cannot be updated. +
+In CamelCase. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds + |  | 
+| *`apiVersion`* __string__ | APIVersion defines the versioned schema of this representation of an object. +
+Servers should convert recognized schemas to the latest internal value, and +
+may reject unrecognized values. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources + |  | 
+| *`metadata`* __link:https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#objectmeta-v1-meta[$$ObjectMeta$$]__ | Refer to Kubernetes API documentation for fields of `metadata`.
+ |  | 
+| *`spec`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-attachedconnectorspec[$$AttachedConnectorSpec$$]__ |  |  | 
+| *`status`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-status[$$Status$$]__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-attachedconnectoranchor"]
+==== AttachedConnectorAnchor
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-attachedconnectoranchorlist[$$AttachedConnectorAnchorList$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`kind`* __string__ | Kind is a string value representing the REST resource this object represents. +
+Servers may infer this from the endpoint the client submits requests to. +
+Cannot be updated. +
+In CamelCase. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds + |  | 
+| *`apiVersion`* __string__ | APIVersion defines the versioned schema of this representation of an object. +
+Servers should convert recognized schemas to the latest internal value, and +
+may reject unrecognized values. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources + |  | 
+| *`metadata`* __link:https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#objectmeta-v1-meta[$$ObjectMeta$$]__ | Refer to Kubernetes API documentation for fields of `metadata`.
+ |  | 
+| *`spec`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-attachedconnectoranchorspec[$$AttachedConnectorAnchorSpec$$]__ |  |  | 
+| *`status`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-status[$$Status$$]__ |  |  | 
+|===
+
+
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-attachedconnectoranchorspec"]
+==== AttachedConnectorAnchorSpec
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-attachedconnectoranchor[$$AttachedConnectorAnchor$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`connectorNamespace`* __string__ |  |  | 
+| *`routingKey`* __string__ |  |  | 
+|===
+
+
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-attachedconnectorspec"]
+==== AttachedConnectorSpec
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-attachedconnector[$$AttachedConnector$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`siteNamespace`* __string__ |  |  | 
+| *`selector`* __string__ |  |  | 
+| *`port`* __integer__ |  |  | 
+| *`tlsCredentials`* __string__ |  |  | 
+| *`type`* __string__ |  |  | 
+| *`includeNotReady`* __boolean__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-certificate"]
+==== Certificate
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-certificatelist[$$CertificateList$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`kind`* __string__ | Kind is a string value representing the REST resource this object represents. +
+Servers may infer this from the endpoint the client submits requests to. +
+Cannot be updated. +
+In CamelCase. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds + |  | 
+| *`apiVersion`* __string__ | APIVersion defines the versioned schema of this representation of an object. +
+Servers should convert recognized schemas to the latest internal value, and +
+may reject unrecognized values. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources + |  | 
+| *`metadata`* __link:https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#objectmeta-v1-meta[$$ObjectMeta$$]__ | Refer to Kubernetes API documentation for fields of `metadata`.
+ |  | 
+| *`spec`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-certificatespec[$$CertificateSpec$$]__ |  |  | 
+| *`status`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-certificatestatus[$$CertificateStatus$$]__ |  |  | 
+|===
+
+
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-certificatespec"]
+==== CertificateSpec
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-certificate[$$Certificate$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`ca`* __string__ |  |  | 
+| *`subject`* __string__ |  |  | 
+| *`hosts`* __string array__ |  |  | 
+| *`client`* __boolean__ |  |  | 
+| *`server`* __boolean__ |  |  | 
+| *`signing`* __boolean__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-certificatestatus"]
+==== CertificateStatus
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-certificate[$$Certificate$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`expiration`* __string__ |  |  | 
+| *`status`* __string__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-connector"]
+==== Connector
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-connectorlist[$$ConnectorList$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`kind`* __string__ | Kind is a string value representing the REST resource this object represents. +
+Servers may infer this from the endpoint the client submits requests to. +
+Cannot be updated. +
+In CamelCase. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds + |  | 
+| *`apiVersion`* __string__ | APIVersion defines the versioned schema of this representation of an object. +
+Servers should convert recognized schemas to the latest internal value, and +
+may reject unrecognized values. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources + |  | 
+| *`metadata`* __link:https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#objectmeta-v1-meta[$$ObjectMeta$$]__ | Refer to Kubernetes API documentation for fields of `metadata`.
+ |  | 
+| *`spec`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-connectorspec[$$ConnectorSpec$$]__ |  |  | 
+| *`status`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-status[$$Status$$]__ |  |  | 
+|===
+
+
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-connectorspec"]
+==== ConnectorSpec
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-connector[$$Connector$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`routingKey`* __string__ |  |  | 
+| *`host`* __string__ |  |  | 
+| *`selector`* __string__ |  |  | 
+| *`port`* __integer__ |  |  | 
+| *`tlsCredentials`* __string__ |  |  | 
+| *`type`* __string__ |  |  | 
+| *`includeNotReady`* __boolean__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-endpoint"]
+==== Endpoint
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-linkspec[$$LinkSpec$$]
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-routeraccessstatus[$$RouterAccessStatus$$]
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-securedaccessstatus[$$SecuredAccessStatus$$]
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-sitestatus[$$SiteStatus$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`name`* __string__ |  |  | 
+| *`host`* __string__ |  |  | 
+| *`port`* __string__ |  |  | 
+| *`group`* __string__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-link"]
+==== Link
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-linklist[$$LinkList$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`kind`* __string__ | Kind is a string value representing the REST resource this object represents. +
+Servers may infer this from the endpoint the client submits requests to. +
+Cannot be updated. +
+In CamelCase. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds + |  | 
+| *`apiVersion`* __string__ | APIVersion defines the versioned schema of this representation of an object. +
+Servers should convert recognized schemas to the latest internal value, and +
+may reject unrecognized values. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources + |  | 
+| *`metadata`* __link:https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#objectmeta-v1-meta[$$ObjectMeta$$]__ | Refer to Kubernetes API documentation for fields of `metadata`.
+ |  | 
+| *`spec`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-linkspec[$$LinkSpec$$]__ |  |  | 
+| *`status`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-linkstatus[$$LinkStatus$$]__ |  |  | 
+|===
+
+
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-linkspec"]
+==== LinkSpec
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-link[$$Link$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`endpoints`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-endpoint[$$Endpoint$$] array__ |  |  | 
+| *`tlsCredentials`* __string__ |  |  | 
+| *`cost`* __integer__ |  |  | 
+| *`noClientAuth`* __boolean__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-linkstatus"]
+==== LinkStatus
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-link[$$Link$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`active`* __boolean__ |  |  | 
+| *`status`* __string__ |  |  | 
+| *`configured`* __boolean__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-listener"]
+==== Listener
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-listenerlist[$$ListenerList$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`kind`* __string__ | Kind is a string value representing the REST resource this object represents. +
+Servers may infer this from the endpoint the client submits requests to. +
+Cannot be updated. +
+In CamelCase. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds + |  | 
+| *`apiVersion`* __string__ | APIVersion defines the versioned schema of this representation of an object. +
+Servers should convert recognized schemas to the latest internal value, and +
+may reject unrecognized values. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources + |  | 
+| *`metadata`* __link:https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#objectmeta-v1-meta[$$ObjectMeta$$]__ | Refer to Kubernetes API documentation for fields of `metadata`.
+ |  | 
+| *`spec`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-listenerspec[$$ListenerSpec$$]__ |  |  | 
+| *`status`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-status[$$Status$$]__ |  |  | 
+|===
+
+
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-listenerspec"]
+==== ListenerSpec
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-listener[$$Listener$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`routingKey`* __string__ |  |  | 
+| *`host`* __string__ |  |  | 
+| *`port`* __integer__ |  |  | 
+| *`tlsCredentials`* __string__ |  |  | 
+| *`type`* __string__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-routeraccess"]
+==== RouterAccess
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-routeraccesslist[$$RouterAccessList$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`kind`* __string__ | Kind is a string value representing the REST resource this object represents. +
+Servers may infer this from the endpoint the client submits requests to. +
+Cannot be updated. +
+In CamelCase. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds + |  | 
+| *`apiVersion`* __string__ | APIVersion defines the versioned schema of this representation of an object. +
+Servers should convert recognized schemas to the latest internal value, and +
+may reject unrecognized values. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources + |  | 
+| *`metadata`* __link:https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#objectmeta-v1-meta[$$ObjectMeta$$]__ | Refer to Kubernetes API documentation for fields of `metadata`.
+ |  | 
+| *`spec`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-routeraccessspec[$$RouterAccessSpec$$]__ |  |  | 
+| *`status`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-routeraccessstatus[$$RouterAccessStatus$$]__ |  |  | 
+|===
+
+
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-routeraccessrole"]
+==== RouterAccessRole
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-routeraccessspec[$$RouterAccessSpec$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`name`* __string__ |  |  | 
+| *`port`* __integer__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-routeraccessspec"]
+==== RouterAccessSpec
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-routeraccess[$$RouterAccess$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`accessType`* __string__ |  |  | 
+| *`roles`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-routeraccessrole[$$RouterAccessRole$$] array__ |  |  | 
+| *`tlsCredentials`* __string__ |  |  | 
+| *`generateTlsCredentials`* __boolean__ |  |  | 
+| *`issuer`* __string__ |  |  | 
+| *`options`* __object (keys:string, values:string)__ |  |  | 
+| *`bindHost`* __string__ |  |  | 
+| *`subjectAlternativeNames`* __string array__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-routeraccessstatus"]
+==== RouterAccessStatus
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-routeraccess[$$RouterAccess$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`active`* __boolean__ |  |  | 
+| *`status`* __string__ |  |  | 
+| *`endpoints`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-endpoint[$$Endpoint$$] array__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-securedaccess"]
+==== SecuredAccess
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-securedaccesslist[$$SecuredAccessList$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`kind`* __string__ | Kind is a string value representing the REST resource this object represents. +
+Servers may infer this from the endpoint the client submits requests to. +
+Cannot be updated. +
+In CamelCase. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds + |  | 
+| *`apiVersion`* __string__ | APIVersion defines the versioned schema of this representation of an object. +
+Servers should convert recognized schemas to the latest internal value, and +
+may reject unrecognized values. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources + |  | 
+| *`metadata`* __link:https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#objectmeta-v1-meta[$$ObjectMeta$$]__ | Refer to Kubernetes API documentation for fields of `metadata`.
+ |  | 
+| *`spec`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-securedaccessspec[$$SecuredAccessSpec$$]__ |  |  | 
+| *`status`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-securedaccessstatus[$$SecuredAccessStatus$$]__ |  |  | 
+|===
+
+
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-securedaccessport"]
+==== SecuredAccessPort
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-securedaccessspec[$$SecuredAccessSpec$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`name`* __string__ |  |  | 
+| *`port`* __integer__ |  |  | 
+| *`targetPort`* __integer__ |  |  | 
+| *`protocol`* __string__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-securedaccessspec"]
+==== SecuredAccessSpec
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-securedaccess[$$SecuredAccess$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`accessType`* __string__ |  |  | 
+| *`selector`* __object (keys:string, values:string)__ |  |  | 
+| *`ports`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-securedaccessport[$$SecuredAccessPort$$] array__ |  |  | 
+| *`certificate`* __string__ |  |  | 
+| *`issuer`* __string__ |  |  | 
+| *`options`* __object (keys:string, values:string)__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-securedaccessstatus"]
+==== SecuredAccessStatus
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-securedaccess[$$SecuredAccess$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`endpoints`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-endpoint[$$Endpoint$$] array__ |  |  | 
+| *`ca`* __string__ |  |  | 
+| *`status`* __string__ |  |  | 
+|===
+
+
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-servicerecord"]
+==== ServiceRecord
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-siterecord[$$SiteRecord$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`routingKey`* __string__ |  |  | 
+| *`connectors`* __string array__ |  |  | 
+| *`listeners`* __string array__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-site"]
+==== Site
+
+
+
+Site defines the location and configuration of a skupper site
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-sitelist[$$SiteList$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`kind`* __string__ | Kind is a string value representing the REST resource this object represents. +
+Servers may infer this from the endpoint the client submits requests to. +
+Cannot be updated. +
+In CamelCase. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds + |  | 
+| *`apiVersion`* __string__ | APIVersion defines the versioned schema of this representation of an object. +
+Servers should convert recognized schemas to the latest internal value, and +
+may reject unrecognized values. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources + |  | 
+| *`metadata`* __link:https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#objectmeta-v1-meta[$$ObjectMeta$$]__ | Refer to Kubernetes API documentation for fields of `metadata`.
+ |  | 
+| *`spec`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-sitespec[$$SiteSpec$$]__ |  |  | 
+| *`status`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-sitestatus[$$SiteStatus$$]__ |  |  | 
+|===
+
+
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-siterecord"]
+==== SiteRecord
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-sitestatus[$$SiteStatus$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`id`* __string__ |  |  | 
+| *`name`* __string__ |  |  | 
+| *`namespace`* __string__ |  |  | 
+| *`platform`* __string__ |  |  | 
+| *`version`* __string__ |  |  | 
+| *`links`* __string array__ |  |  | 
+| *`services`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-servicerecord[$$ServiceRecord$$] array__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-sitespec"]
+==== SiteSpec
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-site[$$Site$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`serviceAccount`* __string__ |  |  | 
+| *`linkAccess`* __string__ |  |  | 
+| *`defaultIssuer`* __string__ |  |  | 
+| *`routerMode`* __string__ |  |  | 
+| *`ha`* __boolean__ |  |  | 
+| *`settings`* __object (keys:string, values:string)__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-sitestatus"]
+==== SiteStatus
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-site[$$Site$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`active`* __boolean__ |  |  | 
+| *`status`* __string__ |  |  | 
+| *`endpoints`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-endpoint[$$Endpoint$$] array__ |  |  | 
+| *`sitesInNetwork`* __integer__ |  |  | 
+| *`servicesInNetwork`* __integer__ |  |  | 
+| *`network`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-siterecord[$$SiteRecord$$] array__ |  |  | 
+| *`defaultIssuer`* __string__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-skupperclusterpolicy"]
+==== SkupperClusterPolicy
+
+
+
+SkupperClusterPolicy defines optional cluster level policies
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-skupperclusterpolicylist[$$SkupperClusterPolicyList$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`kind`* __string__ | Kind is a string value representing the REST resource this object represents. +
+Servers may infer this from the endpoint the client submits requests to. +
+Cannot be updated. +
+In CamelCase. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds + |  | 
+| *`apiVersion`* __string__ | APIVersion defines the versioned schema of this representation of an object. +
+Servers should convert recognized schemas to the latest internal value, and +
+may reject unrecognized values. +
+More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources + |  | 
+| *`metadata`* __link:https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#objectmeta-v1-meta[$$ObjectMeta$$]__ | Refer to Kubernetes API documentation for fields of `metadata`.
+ |  | 
+| *`spec`* __xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-skupperclusterpolicyspec[$$SkupperClusterPolicySpec$$]__ |  |  | 
+|===
+
+
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-skupperclusterpolicyspec"]
+==== SkupperClusterPolicySpec
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-skupperclusterpolicy[$$SkupperClusterPolicy$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`namespaces`* __string array__ |  |  | 
+| *`allowIncomingLinks`* __boolean__ |  |  | 
+| *`allowedOutgoingLinksHostnames`* __string array__ |  |  | 
+| *`allowedExposedResources`* __string array__ |  |  | 
+| *`allowedServices`* __string array__ |  |  | 
+|===
+
+
+[id="{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-status"]
+==== Status
+
+
+
+
+
+
+
+.Appears In:
+****
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-attachedconnector[$$AttachedConnector$$]
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-attachedconnectoranchor[$$AttachedConnectorAnchor$$]
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-connector[$$Connector$$]
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-linkstatus[$$LinkStatus$$]
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-listener[$$Listener$$]
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-routeraccessstatus[$$RouterAccessStatus$$]
+- xref:{anchor_prefix}-github-com-skupperproject-skupper-pkg-apis-skupper-v1alpha1-sitestatus[$$SiteStatus$$]
+****
+
+[cols="20a,50a,15a,15a", options="header"]
+|===
+| Field | Description | Default | Validation
+| *`active`* __boolean__ |  |  | 
+| *`status`* __string__ |  |  | 
+|===
+
+

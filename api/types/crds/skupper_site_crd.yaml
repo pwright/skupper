@@ -12,6 +12,12 @@ spec:
         openAPIV3Schema:
           type: object
           properties:
+            metadata:
+              type: object
+              properties:
+                description:
+                  type: string
+                  description: A namespace where Skupper is installed.
             spec:
               type: object
               properties:
