@@ -9,3 +9,7 @@ init commit
 2. Edit code and `make generate-client`
 
 3. Generate out.asciidoc using `crd-ref-docs ./` 
+
+
+See also:
+* [GitHub - elastic/crd-ref-docs: Generates Kubernetes CRD API reference documentation]( https://github.com/elastic/crd-ref-docs )
