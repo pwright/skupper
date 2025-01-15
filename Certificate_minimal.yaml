@@ -1,0 +1,6 @@
+apiVersion: skupper.io/v2alpha1
+kind: Certificate
+spec:
+  ca: string
+  subject: string
+status: {}

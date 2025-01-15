@@ -1,0 +1,28 @@
+apiVersion: skupper.io/v2alpha1
+kind: RouterAccess
+spec:
+  accessType: string
+  bindHost: string
+  generateTlsCredentials: true
+  issuer: string
+  roles:
+  - name: string
+    port: 1
+  settings: {}
+  subjectAlternativeNames: [] # minItems 0 of type string
+  tlsCredentials: string
+status:
+  conditions:
+  - lastTransitionTime: 2024-10-11T12:48:44Z
+    message: string
+    observedGeneration: 0
+    reason: V # ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+    status: "True" # "True", "False", "Unknown"
+    type: jBy9h # ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][- A-Za-z0-9_.]*)?[A-Za-z0-9])$
+  endpoints:
+  - group: string
+    host: string
+    name: string
+    port: string
+  message: string
+  status: string

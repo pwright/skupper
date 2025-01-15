@@ -1,0 +1,17 @@
+apiVersion: skupper.io/v2alpha1
+kind: AttachedConnectorBinding
+spec:
+  connectorNamespace: string
+  exposePodsByName: true
+  routingKey: string
+  settings: {}
+status:
+  conditions:
+  - lastTransitionTime: 2024-10-11T12:48:44Z
+    message: string
+    observedGeneration: 0
+    reason: TBFzja # ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+    status: "True" # "True", "False", "Unknown"
+    type: ymupn7.2.4.bz9.t/V # ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][- A-Za-z0-9_.]*)?[A-Za-z0-9])$
+  hasMatchingListener: true
+  status: string

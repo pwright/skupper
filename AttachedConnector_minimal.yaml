@@ -1,0 +1,7 @@
+apiVersion: skupper.io/v2alpha1
+kind: AttachedConnector
+spec:
+  port: 1
+  selector: string
+  siteNamespace: string
+status: {}

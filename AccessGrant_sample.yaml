@@ -1,0 +1,23 @@
+apiVersion: skupper.io/v2alpha1
+kind: AccessGrant
+spec:
+  code: string
+  expirationWindow: string
+  issuer: string
+  redemptionsAllowed: 1
+  settings: {}
+status:
+  ca: string
+  code: string
+  conditions:
+  - lastTransitionTime: 2024-10-11T12:48:44Z
+    message: string
+    observedGeneration: 0
+    reason: R # ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+    status: "True" # "True", "False", "Unknown"
+    type: IAE # ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][- A-Za-z0-9_.]*)?[A-Za-z0-9])$
+  expirationTime: 2024-10-11T12:48:44Z
+  message: string
+  redemptions: 1
+  status: string
+  url: string

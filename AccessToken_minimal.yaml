@@ -1,0 +1,7 @@
+apiVersion: skupper.io/v2alpha1
+kind: AccessToken
+spec:
+  ca: string
+  code: string
+  url: string
+status: {}

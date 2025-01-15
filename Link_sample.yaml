@@ -1,0 +1,23 @@
+apiVersion: skupper.io/v2alpha1
+kind: Link
+spec:
+  cost: 1
+  endpoints:
+  - group: string
+    host: string
+    name: string
+    port: string
+  settings: {}
+  tlsCredentials: string
+status:
+  conditions:
+  - lastTransitionTime: 2024-10-11T12:48:44Z
+    message: string
+    observedGeneration: 0
+    reason: bE_f569 # ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+    status: "True" # "True", "False", "Unknown"
+    type: aw2.4.c5desw.4fu8oo2o.4bi1.r/3Inu # ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][- A-Za-z0-9_.]*)?[A-Za-z0-9])$
+  message: string
+  remoteSiteId: string
+  remoteSiteName: string
+  status: string

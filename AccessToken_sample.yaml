@@ -1,0 +1,19 @@
+apiVersion: skupper.io/v2alpha1
+kind: AccessToken
+spec:
+  ca: string
+  code: string
+  linkCost: 1
+  settings: {}
+  url: string
+status:
+  conditions:
+  - lastTransitionTime: 2024-10-11T12:48:44Z
+    message: string
+    observedGeneration: 0
+    reason: d_ozd9D # ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+    status: "True" # "True", "False", "Unknown"
+    type: D # ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][- A-Za-z0-9_.]*)?[A-Za-z0-9])$
+  message: string
+  redeemed: true
+  status: string

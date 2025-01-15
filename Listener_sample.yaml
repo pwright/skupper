@@ -1,0 +1,21 @@
+apiVersion: skupper.io/v2alpha1
+kind: Listener
+spec:
+  exposePodsByName: true
+  host: string
+  port: 1
+  routingKey: string
+  settings: {}
+  tlsCredentials: string
+  type: string
+status:
+  conditions:
+  - lastTransitionTime: 2024-10-11T12:48:44Z
+    message: string
+    observedGeneration: 0
+    reason: QHFgIPO # ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+    status: "True" # "True", "False", "Unknown"
+    type: 77RIlADp # ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][- A-Za-z0-9_.]*)?[A-Za-z0-9])$
+  hasMatchingConnector: true
+  message: string
+  status: string

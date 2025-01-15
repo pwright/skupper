@@ -1,0 +1,29 @@
+apiVersion: skupper.io/v2alpha1
+kind: SecuredAccess
+spec:
+  accessType: string
+  certificate: string
+  issuer: string
+  ports:
+  - name: string
+    port: 1
+    protocol: string
+    targetPort: 1
+  selector: {}
+  settings: {}
+status:
+  ca: string
+  conditions:
+  - lastTransitionTime: 2024-10-11T12:48:44Z
+    message: string
+    observedGeneration: 0
+    reason: GTq # ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+    status: "True" # "True", "False", "Unknown"
+    type: 95p530v.7/0 # ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][- A-Za-z0-9_.]*)?[A-Za-z0-9])$
+  endpoints:
+  - group: string
+    host: string
+    name: string
+    port: string
+  message: string
+  status: string

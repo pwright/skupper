@@ -1,0 +1,6 @@
+apiVersion: skupper.io/v2alpha1
+kind: RouterAccess
+spec:
+  roles:
+  - tlsCredentials: string
+status: {}
