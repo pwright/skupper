@@ -23,8 +23,10 @@ var (
 		api.RouterConfigPath,
 		api.IssuersPath,
 		api.CertificatesPath,
+		api.ProxyProfilesPath,
 		api.InputIssuersPath,
 		api.InputCertificatesPath,
+		api.InputProxyProfilePath,
 		api.InputSiteStatePath,
 		api.LoadedSiteStatePath,
 		api.RuntimeSiteStatePath,
@@ -34,6 +36,7 @@ var (
 	reloadDirectories = []api.InternalPath{
 		api.RouterConfigPath,
 		api.CertificatesPath,
+		api.ProxyProfilesPath,
 		api.RuntimeSiteStatePath,
 		api.RuntimeTokenPath,
 		api.ScriptsPath,
@@ -76,6 +79,9 @@ func (c *FileSystemConfigurationRenderer) Render(siteState *api.SiteState) error
 	if c.SslProfileBasePath == "" {
 		c.SslProfileBasePath = DefaultSslProfileBasePath
 	}
+	if c.ProxyProfileBasePath == "" {
+		c.ProxyProfileBasePath = DefaultProxyProfileBasePath
+	}
 	// Proceed only if output path does not exist
 	outputDir, err := os.Open(outputPath)
 	if err == nil {
@@ -111,6 +117,12 @@ func (c *FileSystemConfigurationRenderer) Render(siteState *api.SiteState) error
 	err = c.createTlsCertificates(siteState)
 	if err != nil {
 		return fmt.Errorf("unable to create tls certificates: %v", err)
+	}
+
+	// Creating the proxy profiles
+	err = c.createProxySecrets(siteState)
+	if err != nil {
+		return fmt.Errorf("unable to create proxy secrets: %v", err)
 	}
 
 	// Creating the tokens
@@ -315,7 +327,7 @@ func (c *FileSystemConfigurationRenderer) createTokens(siteState *api.SiteState)
 }
 
 func (c *FileSystemConfigurationRenderer) createRouterConfig(siteState *api.SiteState) error {
-	c.RouterConfig = siteState.ToRouterConfig(c.SslProfileBasePath, c.Platform)
+	c.RouterConfig = siteState.ToRouterConfig(c.SslProfileBasePath, c.ProxyProfileBasePath, c.Platform)
 
 	// Saving router config
 	routerConfigJson, err := qdr.MarshalRouterConfig(c.RouterConfig)
@@ -471,6 +483,136 @@ func (c *FileSystemConfigurationRenderer) createTlsCertificates(siteState *api.S
 		}
 	}
 	return nil
+}
+
+// createProxySecrets writes proxy configuration files to runtime/proxies/<secret-name>/
+// Files written: host, port, username (if present), password.txt (if present)
+// NOTE: Password MUST be written as "password.txt" (with .txt extension) to match
+// the path constructed by qdr.ConfigureProxyProfile() using PROXY_PASSWORD_FILE constant.
+func (c *FileSystemConfigurationRenderer) createProxySecrets(siteState *api.SiteState) error {
+	var logger = NewLogger()
+	outputPath := c.GetOutputPath(siteState)
+
+	writeSecretFiles := func(basePath string, secret *corev1.Secret) error {
+		baseDir, err := os.Open(basePath)
+		if err != nil {
+			if os.IsNotExist(err) {
+				err = os.MkdirAll(basePath, 0755)
+				if err != nil {
+					return fmt.Errorf("unable to create directory %s: %v", basePath, err)
+				}
+			}
+		} else {
+			defer baseDir.Close()
+			baseDirStat, err := baseDir.Stat()
+			if err != nil {
+				return fmt.Errorf("unable to verify directory %s: %v", basePath, err)
+			}
+			if !baseDirStat.IsDir() {
+				return fmt.Errorf("%s is not a directory", basePath)
+			}
+		}
+		for fileName, data := range secret.Data {
+			// Special handling: password file MUST be named "password.txt" to match
+			// the path constructed by qdr.ConfigureProxyProfile() using PROXY_PASSWORD_FILE
+			outputFileName := fileName
+			if fileName == "password" {
+				outputFileName = "password.txt"
+			}
+			proxyFileName := path.Join(basePath, outputFileName)
+			logger.Debug("writing proxy secret file", slog.String("path", proxyFileName))
+			err = os.WriteFile(proxyFileName, data, 0640)
+			if err != nil {
+				return fmt.Errorf("error writing %s: %v", proxyFileName, err)
+			}
+		}
+		return nil
+	}
+
+	// Iterate over links with proxy configuration
+	for _, link := range siteState.Links {
+		proxyName := link.Spec.GetProxyConfiguration()
+		if proxyName == "" {
+			continue
+		}
+
+		var secret *corev1.Secret
+		var ok bool
+
+		// Check if secret exists in SiteState (pre-loaded)
+		if secret, ok = siteState.Secrets[proxyName]; !ok {
+			// Try loading from input/proxies/<proxyName>/
+			userSecret, err := c.loadUserProxySecret(siteState, proxyName)
+			if err != nil || userSecret == nil {
+				return fmt.Errorf("proxy secret %s not found in SiteState.Secrets or input/proxies", proxyName)
+			}
+			secret = userSecret
+			fmt.Printf("-> User provided proxy secret found: %s\n", proxyName)
+		}
+
+		// Validate required fields
+		if _, ok := secret.Data["host"]; !ok {
+			return fmt.Errorf("proxy secret %s missing required field: host", proxyName)
+		}
+		if _, ok := secret.Data["port"]; !ok {
+			return fmt.Errorf("proxy secret %s missing required field: port", proxyName)
+		}
+
+		// Validate password requires username (both or neither)
+		hasUsername := len(secret.Data["username"]) > 0
+		hasPassword := len(secret.Data["password"]) > 0
+		if hasPassword && !hasUsername {
+			return fmt.Errorf("proxy secret %s has password but no username", proxyName)
+		}
+		if hasUsername && !hasPassword {
+			logger.Warn("proxy secret has username but no password - authentication may fail",
+				slog.String("secret", proxyName))
+		}
+
+		// Write to runtime/proxies/<proxyName>/
+		proxyPath := path.Join(outputPath, string(api.ProxyProfilesPath), proxyName)
+		err := writeSecretFiles(proxyPath, secret)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (c *FileSystemConfigurationRenderer) loadUserProxySecret(siteState *api.SiteState, secretName string) (*corev1.Secret, error) {
+	inputProxyPath := path.Join(c.GetInputPath(siteState, InputPathCerts), "..", "proxies", secretName)
+
+	// Check if directory exists
+	if _, err := os.Stat(inputProxyPath); os.IsNotExist(err) {
+		return nil, nil
+	}
+
+	// Read files from directory
+	entries, err := os.ReadDir(inputProxyPath)
+	if err != nil {
+		return nil, fmt.Errorf("unable to read proxy directory %s: %v", inputProxyPath, err)
+	}
+
+	secret := &corev1.Secret{
+		Data: make(map[string][]byte),
+	}
+	secret.Name = secretName
+	secret.Namespace = siteState.GetNamespace()
+
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+		filePath := path.Join(inputProxyPath, entry.Name())
+		data, err := os.ReadFile(filePath)
+		if err != nil {
+			return nil, fmt.Errorf("unable to read proxy file %s: %v", filePath, err)
+		}
+		secret.Data[entry.Name()] = data
+	}
+
+	return secret, nil
 }
 
 func (c *FileSystemConfigurationRenderer) connectJson(siteState *api.SiteState) *string {

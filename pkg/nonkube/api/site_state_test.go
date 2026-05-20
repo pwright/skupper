@@ -96,7 +96,7 @@ func TestSiteState_ToRouterConfig(t *testing.T) {
 			ss := fakeSiteState()
 			ss.bundle = test.bundle
 			sslProfileBasePath := "${SSL_PROFILE_BASE_PATH}"
-			routerConfig := ss.ToRouterConfig(sslProfileBasePath, "podman")
+			routerConfig := ss.ToRouterConfig(sslProfileBasePath, "${SSL_PROFILE_BASE_PATH}", "podman")
 			if test.bundle {
 				assert.Assert(t, strings.HasSuffix(routerConfig.Metadata.Id, "-{{.SiteNameSuffix}}"))
 				assert.Assert(t, strings.Contains(routerConfig.Metadata.Metadata, `"id":"{{.SiteId}}"`), routerConfig.Metadata.Metadata)

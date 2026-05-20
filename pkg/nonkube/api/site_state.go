@@ -264,11 +264,33 @@ func (s *SiteState) linkAccessMap() site.RouterAccessMap {
 	}
 	return linkAccessMap
 }
-func (s *SiteState) linkMap(sslProfileBasePath string) site.LinkMap {
+func (s *SiteState) linkMap(sslProfileBasePath, proxyProfileBasePath string) site.LinkMap {
 	linkMap := site.LinkMap{}
 	for name, link := range s.Links {
-		// TODO: proxy profile config ?
-		siteLink := site.NewLink(name, path.Join(sslProfileBasePath, string(CertificatesPath)), &site.ProxyConfig{})
+		var proxyConfig *site.ProxyConfig
+
+		// Check if link has proxy configuration
+		if proxyName := link.Spec.GetProxyConfiguration(); proxyName != "" {
+			if secret, ok := s.Secrets[proxyName]; ok {
+				proxyConfig = &site.ProxyConfig{
+					Host: string(secret.Data["host"]),
+					Port: string(secret.Data["port"]),
+					User: string(secret.Data["username"]),
+					// ProfilePath is the directory containing password.txt
+					// ConfigureProxyProfile will append /<name>/password.txt
+					ProfilePath: path.Join(proxyProfileBasePath, string(ProxyProfilesPath)),
+				}
+			} else {
+				// Log warning but continue - createProxySecrets will fail later if secret missing
+				fmt.Printf("Warning: proxy secret %s referenced by link %s not found\n", proxyName, name)
+			}
+		}
+
+		if proxyConfig == nil {
+			proxyConfig = &site.ProxyConfig{} // empty if no proxy
+		}
+
+		siteLink := site.NewLink(name, path.Join(sslProfileBasePath, string(CertificatesPath)), proxyConfig)
 		link.SetConfigured(nil)
 		siteLink.Update(link)
 		linkMap[name] = siteLink
@@ -293,7 +315,7 @@ func (s *SiteState) bindings(sslProfileBasePath string) *site.Bindings {
 	return b
 }
 
-func (s *SiteState) ToRouterConfig(sslProfileBasePath string, platform string) qdr.RouterConfig {
+func (s *SiteState) ToRouterConfig(sslProfileBasePath, proxyProfileBasePath, platform string) qdr.RouterConfig {
 	if s.SiteId == "" {
 		s.SiteId = uuid.New().String()
 	}
@@ -332,7 +354,7 @@ func (s *SiteState) ToRouterConfig(sslProfileBasePath string, platform string) q
 	// LinkAccess
 	s.linkAccessMap().DesiredConfig(nil, path.Join(sslProfileBasePath, string(CertificatesPath))).Apply(&routerConfig)
 	// Link
-	s.linkMap(sslProfileBasePath).Apply(&routerConfig)
+	s.linkMap(sslProfileBasePath, proxyProfileBasePath).Apply(&routerConfig)
 	// Bindings
 	s.bindings(sslProfileBasePath).Apply(&routerConfig)
 	// Log (static for now) TODO use site specific options to configure logging
