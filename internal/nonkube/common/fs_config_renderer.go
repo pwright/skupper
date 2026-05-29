@@ -71,6 +71,29 @@ func NewFileSystemConfigurationRenderer(outputPath string) *FileSystemConfigurat
 	return &FileSystemConfigurationRenderer{}
 }
 
+// getSecretData retrieves a value from a Secret, checking both Data (base64) and StringData (plain text).
+// This handles Secrets loaded from YAML files that may use stringData instead of data.
+// Returns the decoded value as a byte slice.
+func getSecretData(secret *corev1.Secret, key string) []byte {
+	// First check Data (base64-encoded)
+	if val, ok := secret.Data[key]; ok {
+		return val
+	}
+	// Fall back to StringData (plain text)
+	if secret.StringData != nil {
+		if val, ok := secret.StringData[key]; ok {
+			return []byte(val)
+		}
+	}
+	return nil
+}
+
+// hasSecretData checks if a Secret contains a non-empty value for the given key,
+// checking both Data and StringData fields.
+func hasSecretData(secret *corev1.Secret, key string) bool {
+	return len(getSecretData(secret, key)) > 0
+}
+
 // Render simply renders the given site state as configuration files.
 func (c *FileSystemConfigurationRenderer) Render(siteState *api.SiteState) error {
 	var err error
@@ -366,6 +389,9 @@ func (c *FileSystemConfigurationRenderer) createTlsCertificates(siteState *api.S
 				return fmt.Errorf("%s is not a directory", basePath)
 			}
 		}
+		// TODO: Support stringData for certificate secrets (see proxy implementation)
+		// Currently only reads from secret.Data (base64), not secret.StringData (plain text)
+		// This should be fixed in a separate PR to handle TLS certificate YAMLs with stringData
 		for fileName, data := range secret.Data {
 			certFileName := path.Join(basePath, fileName)
 			if certFile, err := os.Open(certFileName); err == nil {
@@ -512,7 +538,24 @@ func (c *FileSystemConfigurationRenderer) createProxySecrets(siteState *api.Site
 				return fmt.Errorf("%s is not a directory", basePath)
 			}
 		}
+
+		// Write all keys from both Data and StringData
+		keys := make(map[string][]byte)
+
+		// Collect from Data (base64)
 		for fileName, data := range secret.Data {
+			keys[fileName] = data
+		}
+
+		// Collect from StringData (plain text), overriding Data if both exist
+		if secret.StringData != nil {
+			for fileName, data := range secret.StringData {
+				keys[fileName] = []byte(data)
+			}
+		}
+
+		// Write all collected keys
+		for fileName, data := range keys {
 			// Special handling: password file MUST be named "password.txt" to match
 			// the path constructed by qdr.ConfigureProxyProfile() using PROXY_PASSWORD_FILE
 			outputFileName := fileName
@@ -550,17 +593,17 @@ func (c *FileSystemConfigurationRenderer) createProxySecrets(siteState *api.Site
 			fmt.Printf("-> User provided proxy secret found: %s\n", proxyName)
 		}
 
-		// Validate required fields
-		if _, ok := secret.Data["host"]; !ok {
+		// Validate required fields (check both Data and StringData)
+		if !hasSecretData(secret, "host") {
 			return fmt.Errorf("proxy secret %s missing required field: host", proxyName)
 		}
-		if _, ok := secret.Data["port"]; !ok {
+		if !hasSecretData(secret, "port") {
 			return fmt.Errorf("proxy secret %s missing required field: port", proxyName)
 		}
 
 		// Validate password requires username (both or neither)
-		hasUsername := len(secret.Data["username"]) > 0
-		hasPassword := len(secret.Data["password"]) > 0
+		hasUsername := hasSecretData(secret, "username")
+		hasPassword := hasSecretData(secret, "password")
 		if hasPassword && !hasUsername {
 			return fmt.Errorf("proxy secret %s has password but no username", proxyName)
 		}

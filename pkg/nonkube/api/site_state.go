@@ -272,10 +272,25 @@ func (s *SiteState) linkMap(sslProfileBasePath, proxyProfileBasePath string) sit
 		// Check if link has proxy configuration
 		if proxyName := link.Spec.GetProxyConfiguration(); proxyName != "" {
 			if secret, ok := s.Secrets[proxyName]; ok {
+				// Helper to get secret data from either Data or StringData
+				getSecretValue := func(key string) string {
+					// First check Data (base64)
+					if val, ok := secret.Data[key]; ok {
+						return string(val)
+					}
+					// Fall back to StringData (plain text)
+					if secret.StringData != nil {
+						if val, ok := secret.StringData[key]; ok {
+							return val
+						}
+					}
+					return ""
+				}
+
 				proxyConfig = &site.ProxyConfig{
-					Host: string(secret.Data["host"]),
-					Port: string(secret.Data["port"]),
-					User: string(secret.Data["username"]),
+					Host: getSecretValue("host"),
+					Port: getSecretValue("port"),
+					User: getSecretValue("username"),
 					// ProfilePath is the directory containing password.txt
 					// ConfigureProxyProfile will append /<name>/password.txt
 					ProfilePath: path.Join(proxyProfileBasePath, string(ProxyProfilesPath)),
