@@ -50,6 +50,11 @@ spec:
         prometheus.io/port: "9090"
         prometheus.io/scrape: "true"
         skupper.io/config-digest: {{ .ConfigDigest }}
+{{- if .PodAnnotations }}
+{{- range $key, $value := .PodAnnotations }}
+        {{ $key }}: {{$value -}}
+{{- end }}
+{{- end }}
       labels:
         app.kubernetes.io/name: skupper-router
         app.kubernetes.io/part-of: skupper
@@ -57,6 +62,11 @@ spec:
         skupper.io/component: router
         skupper.io/group: {{ .Group }}
         skupper.io/type: site
+{{- if .PodLabels }}
+{{- range $key, $value := .PodLabels }}
+        {{ $key }}: {{$value -}}
+{{- end }}
+{{- end }}
     spec:
       containers:
       - env:

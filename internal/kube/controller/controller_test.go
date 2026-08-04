@@ -546,6 +546,28 @@ func TestGeneral(t *testing.T) {
 				f.serviceWithMetadata(f.service("mysvc", "test", f.routerSelector(true), f.servicePort("mylistener", 8080, 1024)), map[string]string{"acme.com/foo": "bar"}, nil),
 			},
 		},
+		{
+			name: "labelling with includePods",
+			k8sObjects: []runtime.Object{
+				f.configmap("labels", "test", map[string]string{"includePods": "true"}, map[string]string{"skupper.io/label-template": "true", "acme.com/foo": "bar"}, map[string]string{"acme.com/annot": "baz"}),
+			},
+			skupperObjects: []runtime.Object{
+				f.site("mysvc", "test", "", false, false),
+				f.listener("mylistener", "test", "mysvc", 8080),
+			},
+			expectedSiteStatuses: []*skupperv2alpha1.Site{
+				f.siteStatus("mysvc", "test", skupperv2alpha1.StatusPending, "Not Running", f.condition(skupperv2alpha1.CONDITION_TYPE_CONFIGURED, metav1.ConditionTrue, "Ready", "OK")),
+			},
+			expectedDynamicResources: map[schema.GroupVersionResource]*unstructured.Unstructured{
+				resource.DeploymentResource(): f.routerDeploymentWithPodMetadata("skupper-router", "test", map[string]string{"acme.com/foo": "bar"}, map[string]string{"acme.com/annot": "baz"}),
+			},
+			expectedRouterConfig: []*RouterConfig{
+				f.routerConfig("skupper-router", "test").tcpListener("listener/mylistener", "1024", "", ""),
+			},
+			expectedServices: []*corev1.Service{
+				f.serviceWithMetadata(f.service("mysvc", "test", f.routerSelector(true), f.servicePort("mylistener", 8080, 1024)), map[string]string{"acme.com/foo": "bar"}, map[string]string{"acme.com/annot": "baz"}),
+			},
+		},
 	}
 	for _, tt := range testTable {
 		t.Run(tt.name, func(t *testing.T) {
@@ -1467,6 +1489,20 @@ func (f *factory) routerDeployment(name string, namespace string) *unstructured.
 		},
 	}
 	return f.unstructured(name, namespace, content, labels)
+}
+
+func (f *factory) routerDeploymentWithPodMetadata(name string, namespace string, podLabels map[string]string, podAnnotations map[string]string) *unstructured.Unstructured {
+	deployment := f.routerDeployment(name, namespace)
+	template := deployment.Object["spec"].(map[string]interface{})["template"].(map[string]interface{})
+	metadata := map[string]interface{}{}
+	if len(podLabels) > 0 {
+		metadata["labels"] = podLabels
+	}
+	if len(podAnnotations) > 0 {
+		metadata["annotations"] = podAnnotations
+	}
+	template["metadata"] = metadata
+	return deployment
 }
 
 type ExpectedResources struct {

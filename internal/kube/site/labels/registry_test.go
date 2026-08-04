@@ -319,6 +319,18 @@ func update(key string, labels map[string]string, annotations map[string]string,
 }
 
 func updateWithExcludes(key string, labels map[string]string, annotations map[string]string, kind string, name string, excludes string) Update {
+	return updateWithOptions(key, labels, annotations, kind, name, excludes, "")
+}
+
+func updateWithIncludePods(key string, labels map[string]string, annotations map[string]string, kind string, name string, includePods bool) Update {
+	includePodsValue := "false"
+	if includePods {
+		includePodsValue = "true"
+	}
+	return updateWithOptions(key, labels, annotations, kind, name, "", includePodsValue)
+}
+
+func updateWithOptions(key string, labels map[string]string, annotations map[string]string, kind string, name string, excludes string, includePods string) Update {
 	data := map[string]string{}
 	if kind != "" {
 		data["kind"] = kind
@@ -328,6 +340,9 @@ func updateWithExcludes(key string, labels map[string]string, annotations map[st
 	}
 	if excludes != "" {
 		data["exclude"] = excludes
+	}
+	if includePods != "" {
+		data["includePods"] = includePods
 	}
 	if labels == nil {
 		labels = map[string]string{}
@@ -388,4 +403,47 @@ func TestLabelSelectorFiltering(t *testing.T) {
 	_ = registry.SetLabels("test", "svc-c", "Service", actual3)
 	_, present = actual3["acme.com/bar"]
 	assert.Assert(t, !present)
+}
+
+func TestIncludePods(t *testing.T) {
+	registry := NewLabelsAndAnnotations("default")
+
+	// Without includePods, resource metadata is labelled but pods are not.
+	registry.Update("test/no-pods", update("test/no-pods", map[string]string{"acme.com/foo": "bar"}, map[string]string{"acme.com/annot": "baz"}, "", "").config)
+	resourceMeta := &metav1.ObjectMeta{}
+	assert.Assert(t, registry.SetObjectMetadata("test", "skupper-router", "Deployment", resourceMeta))
+	assert.Equal(t, resourceMeta.Labels["acme.com/foo"], "bar")
+	assert.Equal(t, resourceMeta.Annotations["acme.com/annot"], "baz")
+
+	podMeta := &metav1.ObjectMeta{}
+	assert.Assert(t, !registry.SetPodObjectMetadata("test", "skupper-router", "Deployment", podMeta))
+	_, present := podMeta.Labels["acme.com/foo"]
+	assert.Assert(t, !present)
+	_, present = podMeta.Annotations["acme.com/annot"]
+	assert.Assert(t, !present)
+
+	// With includePods=true, the same labels/annotations also apply to pods.
+	registry.Update("test/with-pods", updateWithIncludePods("test/with-pods", map[string]string{"acme.com/pod": "yes"}, map[string]string{"acme.com/pod-annot": "yes"}, "", "", true).config)
+	podMeta = &metav1.ObjectMeta{}
+	assert.Assert(t, registry.SetPodObjectMetadata("test", "skupper-router", "Deployment", podMeta))
+	assert.Equal(t, podMeta.Labels["acme.com/pod"], "yes")
+	assert.Equal(t, podMeta.Annotations["acme.com/pod-annot"], "yes")
+	// Templates without includePods still must not appear on pods.
+	_, present = podMeta.Labels["acme.com/foo"]
+	assert.Assert(t, !present)
+
+	// Resource metadata still receives labels from both templates.
+	resourceMeta = &metav1.ObjectMeta{}
+	assert.Assert(t, registry.SetObjectMetadata("test", "skupper-router", "Deployment", resourceMeta))
+	assert.Equal(t, resourceMeta.Labels["acme.com/foo"], "bar")
+	assert.Equal(t, resourceMeta.Labels["acme.com/pod"], "yes")
+
+	// includePods values other than "true" do not opt in.
+	registry.Update("test/false-pods", updateWithIncludePods("test/false-pods", map[string]string{"acme.com/no": "pods"}, nil, "", "", false).config)
+	podMeta = &metav1.ObjectMeta{}
+	_ = registry.SetPodObjectMetadata("test", "skupper-router", "Deployment", podMeta)
+	_, present = podMeta.Labels["acme.com/no"]
+	assert.Assert(t, !present)
+	// The earlier includePods=true template still applies.
+	assert.Equal(t, podMeta.Labels["acme.com/pod"], "yes")
 }

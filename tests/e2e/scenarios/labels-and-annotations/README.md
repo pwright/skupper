@@ -8,9 +8,10 @@ This test validates Skupper's ability to manage custom labels and annotations on
 
     Scenario 1: Pre-existing Component
     A component created before a ConfigMap with custom settings is deployed will be automatically labeled and annotated once the Skupper controller processes the ConfigMap.
+    When the ConfigMap sets `includePods: "true"`, the Deployment's pod template also receives the labels and annotations.
 
     Scenario 2: New Component
-    A component created while a ConfigMap with custom settings already exists will be created with the custom labels and annotations already applied.
+    A component created while a ConfigMap with custom settings already exists will be created with the custom labels and annotations already applied (including the pod template when `includePods` is set).
 
     Scenario 3: Removal
     When the ConfigMap with custom settings is removed, all custom labels and annotations must be removed from components, regardless of when they were created.

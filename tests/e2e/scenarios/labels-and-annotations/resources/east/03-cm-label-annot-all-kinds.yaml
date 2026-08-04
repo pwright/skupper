@@ -10,3 +10,4 @@ metadata:
     com.acme.foo/annotest: "skupper-custom-annotation"
     sku.pper: "skupper-custom-annotation2"
 data:
+  includePods: "true"

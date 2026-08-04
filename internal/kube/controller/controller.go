@@ -184,6 +184,10 @@ func (c *Controller) SetObjectMetadata(namespace string, name string, kind strin
 	return c.labelling.SetObjectMetadata(namespace, name, kind, meta)
 }
 
+func (c *Controller) SetPodObjectMetadata(namespace string, name string, kind string, meta *metav1.ObjectMeta) bool {
+	return c.labelling.SetPodObjectMetadata(namespace, name, kind, meta)
+}
+
 func (c *Controller) Namespace() string {
 	return c.self.Namespace
 }

@@ -43,6 +43,7 @@ type Labelling interface {
 	SetLabels(namespace string, name string, kind string, labels map[string]string) bool
 	SetAnnotations(namespace string, name string, kind string, annotations map[string]string) bool
 	SetObjectMetadata(namespace string, name string, kind string, meta *metav1.ObjectMeta) bool
+	SetPodObjectMetadata(namespace string, name string, kind string, meta *metav1.ObjectMeta) bool
 }
 
 type Site struct {

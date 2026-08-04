@@ -95,6 +95,10 @@
             - full_verify.resources | length == 1
             - full_verify.resources[0].metadata.annotations['com.acme.foo/annotest'] == custom_annotations['com.acme.foo/annotest']
             - full_verify.resources[0].metadata.annotations['sku.pper'] == custom_annotations['sku.pper']
+            - full_verify.resources[0].spec.template.metadata.labels['acme.foo/labeltest'] == custom_labels['acme.foo/labeltest']
+            - full_verify.resources[0].spec.template.metadata.labels['sku.pper'] == custom_labels['sku.pper']
+            - full_verify.resources[0].spec.template.metadata.annotations['com.acme.foo/annotest'] == custom_annotations['com.acme.foo/annotest']
+            - full_verify.resources[0].spec.template.metadata.annotations['sku.pper'] == custom_annotations['sku.pper']
           retries: "{{ resource_retry_value * RESOURCE_RETRY_MULTIPLIER }}"
           delay: "{{ resource_delay_value * RESOURCE_DELAY_MULTIPLIER }}"
           when:
@@ -129,6 +133,10 @@
             - annotated_verify.resources[0].metadata.labels is defined and 'sku.pper' in annotated_verify.resources[0].metadata.labels
             - annotated_verify.resources[0].metadata.annotations is defined and 'com.acme.foo/annotest' in annotated_verify.resources[0].metadata.annotations
             - annotated_verify.resources[0].metadata.annotations is defined and 'sku.pper' in annotated_verify.resources[0].metadata.annotations
+            - annotated_verify.resources[0].spec.template.metadata.labels is defined and 'acme.foo/labeltest' in annotated_verify.resources[0].spec.template.metadata.labels
+            - annotated_verify.resources[0].spec.template.metadata.labels is defined and 'sku.pper' in annotated_verify.resources[0].spec.template.metadata.labels
+            - annotated_verify.resources[0].spec.template.metadata.annotations is defined and 'com.acme.foo/annotest' in annotated_verify.resources[0].spec.template.metadata.annotations
+            - annotated_verify.resources[0].spec.template.metadata.annotations is defined and 'sku.pper' in annotated_verify.resources[0].spec.template.metadata.annotations
           retries: "{{ resource_retry_value * RESOURCE_RETRY_MULTIPLIER }}"
           delay: "{{ resource_delay_value * RESOURCE_DELAY_MULTIPLIER }}"
           when:
@@ -167,6 +175,10 @@
             - removed_verify.resources[0].metadata.labels is defined and 'sku.pper' not in removed_verify.resources[0].metadata.labels
             - removed_verify.resources[0].metadata.annotations is defined and 'com.acme.foo/annotest' not in removed_verify.resources[0].metadata.annotations
             - removed_verify.resources[0].metadata.annotations is defined and 'sku.pper' not in removed_verify.resources[0].metadata.annotations
+            - removed_verify.resources[0].spec.template.metadata.labels is defined and 'acme.foo/labeltest' not in removed_verify.resources[0].spec.template.metadata.labels
+            - removed_verify.resources[0].spec.template.metadata.labels is defined and 'sku.pper' not in removed_verify.resources[0].spec.template.metadata.labels
+            - removed_verify.resources[0].spec.template.metadata.annotations is defined and 'com.acme.foo/annotest' not in removed_verify.resources[0].spec.template.metadata.annotations
+            - removed_verify.resources[0].spec.template.metadata.annotations is defined and 'sku.pper' not in removed_verify.resources[0].spec.template.metadata.annotations
           retries: "{{ resource_retry_value * RESOURCE_RETRY_MULTIPLIER }}"
           delay: "{{ resource_delay_value * RESOURCE_DELAY_MULTIPLIER }}"
 

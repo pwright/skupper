@@ -44,11 +44,11 @@ func (l *LabelsAndAnnotations) Update(key string, cm *corev1.ConfigMap) error {
 func (l *LabelsAndAnnotations) SetLabels(namespace string, name string, kind string, labels map[string]string) bool {
 	desired := map[string]string{}
 	if registry, ok := l.namespaces[namespace]; ok {
-		registry.setLabels(name, kind, labels, desired)
+		registry.setLabels(name, kind, labels, desired, false)
 	}
 	if namespace != l.controllerNamespace {
 		if registry, ok := l.namespaces[l.controllerNamespace]; ok {
-			registry.setLabels(name, kind, labels, desired)
+			registry.setLabels(name, kind, labels, desired, false)
 		}
 	}
 	return setValues(desired, labels)
@@ -57,17 +57,25 @@ func (l *LabelsAndAnnotations) SetLabels(namespace string, name string, kind str
 func (l *LabelsAndAnnotations) SetAnnotations(namespace string, name string, kind string, annotations map[string]string) bool {
 	desired := map[string]string{}
 	if registry, ok := l.namespaces[namespace]; ok {
-		registry.setAnnotations(name, kind, annotations, desired)
+		registry.setAnnotations(name, kind, annotations, desired, false)
 	}
 	if namespace != l.controllerNamespace {
 		if registry, ok := l.namespaces[l.controllerNamespace]; ok {
-			registry.setAnnotations(name, kind, annotations, desired)
+			registry.setAnnotations(name, kind, annotations, desired, false)
 		}
 	}
 	return setValues(desired, annotations)
 }
 
 func (l *LabelsAndAnnotations) SetObjectMetadata(namespace string, name string, kind string, meta *metav1.ObjectMeta) bool {
+	return l.setObjectMetadata(namespace, name, kind, meta, false)
+}
+
+func (l *LabelsAndAnnotations) SetPodObjectMetadata(namespace string, name string, kind string, meta *metav1.ObjectMeta) bool {
+	return l.setObjectMetadata(namespace, name, kind, meta, true)
+}
+
+func (l *LabelsAndAnnotations) setObjectMetadata(namespace string, name string, kind string, meta *metav1.ObjectMeta, requireIncludePods bool) bool {
 	if meta == nil {
 		return false
 	}
@@ -79,13 +87,13 @@ func (l *LabelsAndAnnotations) SetObjectMetadata(namespace string, name string, 
 	}
 	changed := false
 	if registry, ok := l.namespaces[namespace]; ok {
-		if registry.filter(name, kind, meta.Labels, meta.Labels, meta.Annotations) {
+		if registry.filter(name, kind, meta.Labels, meta.Labels, meta.Annotations, requireIncludePods) {
 			changed = true
 		}
 	}
 	if namespace != l.controllerNamespace {
 		if registry, ok := l.namespaces[l.controllerNamespace]; ok {
-			if registry.filter(name, kind, meta.Labels, meta.Labels, meta.Annotations) {
+			if registry.filter(name, kind, meta.Labels, meta.Labels, meta.Annotations, requireIncludePods) {
 				changed = true
 			}
 		}
@@ -149,21 +157,24 @@ func (r *Registry) update(key string, cm *corev1.ConfigMap) error {
 	return nil
 }
 
-func (r *Registry) setLabels(name string, kind string, target map[string]string, labels map[string]string) bool {
-	return r.filter(name, kind, target, labels, nil)
+func (r *Registry) setLabels(name string, kind string, target map[string]string, labels map[string]string, requireIncludePods bool) bool {
+	return r.filter(name, kind, target, labels, nil, requireIncludePods)
 }
 
-func (r *Registry) setAnnotations(name string, kind string, target map[string]string, annotations map[string]string) bool {
-	return r.filter(name, kind, target, nil, annotations)
+func (r *Registry) setAnnotations(name string, kind string, target map[string]string, annotations map[string]string, requireIncludePods bool) bool {
+	return r.filter(name, kind, target, nil, annotations, requireIncludePods)
 }
 
-func (r *Registry) filter(name string, kind string, target map[string]string, labels map[string]string, annotations map[string]string) bool {
+func (r *Registry) filter(name string, kind string, target map[string]string, labels map[string]string, annotations map[string]string, requireIncludePods bool) bool {
 	changed := false
 	for _, entry := range r.config {
 		if entry.invalid {
 			continue
 		}
 		cm := entry.cm
+		if requireIncludePods && !includePods(cm) {
+			continue
+		}
 		if !matchKey(cm, "name", name) {
 			continue
 		}
@@ -192,7 +203,7 @@ func (r *Registry) filter(name string, kind string, target map[string]string, la
 				if isExcluded(k, excludes) {
 					continue
 				}
-				if v2, ok := labels[k]; !ok || v != v2 {
+				if v2, ok := annotations[k]; !ok || v != v2 {
 					annotations[k] = v
 					changed = true
 				}
@@ -219,6 +230,13 @@ func matchKey(cm *corev1.ConfigMap, key string, expected string) bool {
 		return true
 	}
 	return actual == expected
+}
+
+func includePods(cm *corev1.ConfigMap) bool {
+	if cm.Data == nil {
+		return false
+	}
+	return cm.Data["includePods"] == "true"
 }
 
 func exclude(cm *corev1.ConfigMap) []string {

@@ -29,6 +29,7 @@ type Labelling interface {
 	SetLabels(namespace string, name string, kind string, labels map[string]string) bool
 	SetAnnotations(namespace string, name string, kind string, annotations map[string]string) bool
 	SetObjectMetadata(namespace string, name string, kind string, meta *metav1.ObjectMeta) bool
+	SetPodObjectMetadata(namespace string, name string, kind string, meta *metav1.ObjectMeta) bool
 }
 
 func resourceTemplates(site *skupperv2alpha1.Site, group string, size sizing.Sizing, labelling Labelling, disableSecCtx bool) []resource.Template {
@@ -69,6 +70,8 @@ type CoreParams struct {
 	Sizing             sizing.Sizing
 	Labels             map[string]string
 	Annotations        map[string]string
+	PodLabels          map[string]string
+	PodAnnotations     map[string]string
 	EnableAntiAffinity bool
 	DisableSecCtx      bool
 }
@@ -86,6 +89,17 @@ func (p *CoreParams) setLabelsAndAnnotations(labelling Labelling, namespace stri
 	labelling.SetObjectMetadata(namespace, name, kind, meta)
 	quoteValues(p.Labels)
 	quoteValues(p.Annotations)
+	if kind == "Deployment" {
+		p.PodLabels = map[string]string{}
+		p.PodAnnotations = map[string]string{}
+		podMeta := &metav1.ObjectMeta{
+			Labels:      p.PodLabels,
+			Annotations: p.PodAnnotations,
+		}
+		labelling.SetPodObjectMetadata(namespace, name, kind, podMeta)
+		quoteValues(p.PodLabels)
+		quoteValues(p.PodAnnotations)
+	}
 	return p
 }
 
