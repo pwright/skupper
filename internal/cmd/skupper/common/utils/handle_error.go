@@ -3,6 +3,7 @@ package utils
 import (
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 	"syscall"
 )
@@ -20,7 +21,7 @@ const (
 
 func HandleError(errType ErrorType, err error) {
 	if err != nil {
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, err)
 		syscall.Exit(int(errType))
 	}
 }

@@ -1,6 +1,8 @@
 package root
 
 import (
+	"os"
+
 	"github.com/skupperproject/skupper/internal/cmd/skupper/common"
 	"github.com/skupperproject/skupper/internal/cmd/skupper/connector"
 	"github.com/skupperproject/skupper/internal/cmd/skupper/debug"
@@ -39,6 +41,10 @@ func NewSkupperRootCommand() *cobra.Command {
 	rootCmd.AddCommand(system.NewCmdSystem())
 
 	rootCmd.SetHelpCommand(&cobra.Command{Hidden: true})
+
+	rootCmd.SetOut(os.Stdout)
+	rootCmd.SetErr(os.Stderr)
+	rootCmd.SilenceUsage = true
 
 	return rootCmd
 }
